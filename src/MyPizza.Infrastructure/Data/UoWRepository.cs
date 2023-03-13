@@ -1,15 +1,25 @@
 ﻿using MyPizza.ApplicationCore.Entities;
-using MyPizza.ApplicationCore.Interfaces;
+using MyPizza.Infrastructure.Interfaces;
 
 namespace MyPizza.Infrastructure.Data
 {
-    public sealed class UoWRepository
+    public sealed class UoWRepository : IUoWRepository
     {
-        public IRepository<Category> Categories;
+        public IEFRepository<Category> Categories { get; }
+        public IEFRepository<Product> Products { get; }
+        public IEFRepository<ProductType> ProductTypes { get; }
+        public IEFRepository<WeightType> WeightTypes { get; }
 
-        public UoWRepository(IRepository<Category> categories)
+        public UoWRepository(
+            IEFRepository<Category> categories,
+            IEFRepository<Product> products,
+            IEFRepository<ProductType> productTypes,
+            IEFRepository<WeightType> weightTypes)
         {
             Categories = categories;
+            Products = products;
+            ProductTypes = productTypes;
+            WeightTypes = weightTypes;
         }
     }
 }

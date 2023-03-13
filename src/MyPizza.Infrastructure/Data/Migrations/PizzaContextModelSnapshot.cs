@@ -83,6 +83,9 @@ namespace MyPizza.Infrastructure.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PictureUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
@@ -113,7 +116,7 @@ namespace MyPizza.Infrastructure.Data.Migrations
             modelBuilder.Entity("MyPizza.ApplicationCore.Entities.Product", b =>
                 {
                     b.HasOne("MyPizza.ApplicationCore.Entities.ProductType", "ProductType")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("ProductTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -152,6 +155,11 @@ namespace MyPizza.Infrastructure.Data.Migrations
                     b.Navigation("ProductTypes");
 
                     b.Navigation("WeightTypes");
+                });
+
+            modelBuilder.Entity("MyPizza.ApplicationCore.Entities.ProductType", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }
