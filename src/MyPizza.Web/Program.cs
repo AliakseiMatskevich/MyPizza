@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MyPizza.Infrastructure.Data;
+using MyPizza.Web.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,11 @@ builder.Services.AddDbContext<PizzaContext>(context =>
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
+builder.Services.AddCoreServices();
+
+//AutoMapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
 var app = builder.Build();
 app.Logger.LogInformation("App created...");

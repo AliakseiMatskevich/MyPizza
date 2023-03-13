@@ -1,0 +1,13 @@
+﻿@page
+@model IndexModel
+
+<section>
+    <partial name="ProductTypePartial/_ProductTypeCategoryPartial" model="@Model.ProductTypeModel.Categories" />
+</section>
+<section>
+    <div class="container">
+        <div class="row">
+            <partial name="ProductTypePartial/_ProductTypeCardsPartial" model="@Model.ProductTypeModel.ProductTypeItems" />            
+        </div>
+    </div>
+</section>

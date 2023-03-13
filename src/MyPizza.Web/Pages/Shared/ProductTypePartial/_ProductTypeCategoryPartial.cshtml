@@ -1,0 +1,26 @@
+﻿@model List<CategoryViewModel>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid fs-5">
+        @*<a class="navbar-brand" href="#">Navbar</a>*@
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                @if (Model.Count > 0)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link active" asp-page="Index" asp-route-categoryId="@Model![0].Id">@Model![0].Name</a>
+                    </li>
+                }
+                @foreach (var item in Model.Skip(1))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-page="Index" asp-route-categoryId="@item.Id">@item.Name</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>
