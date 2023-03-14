@@ -1,11 +1,13 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MyPizza.ApplicationCore.Entities;
 using MyPizza.Web.Interfaces;
 using MyPizza.Web.Models;
 
-namespace MyPizza.Web.Pages
+namespace MyPizza.Web.Pages.ProducType
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly IUoWServices _services;

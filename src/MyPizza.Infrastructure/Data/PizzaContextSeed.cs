@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MyPizza.ApplicationCore.Entities;
+using MyPizza.Infrastructure.Data.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +13,7 @@ namespace MyPizza.Infrastructure.Data
 {
     public class PizzaContextSeed
     {
-        public static async Task SeedAsync(PizzaContext context, ILogger logger)
+        public static async Task SeedAsync(PizzaContext context, ILogger logger, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             if (!await context.Categories.AnyAsync())
             {
@@ -30,6 +32,26 @@ namespace MyPizza.Infrastructure.Data
                 await context.Products.AddRangeAsync(products);
 
                 await context.SaveChangesAsync();
+
+                #region Identity               
+                var roleAdmin = new IdentityRole(Constants.ROLE_ADMIN);
+                await roleManager.CreateAsync(roleAdmin);
+
+                var roleBuyer = new IdentityRole(Constants.ROLE_BUYER);
+                await roleManager.CreateAsync(roleBuyer);                
+
+                var buyerUser = new ApplicationUser { UserName = Constants.EMAIL_BUYER, Email = Constants.EMAIL_BUYER };
+                await userManager.CreateAsync(buyerUser, Constants.DEFAULT_PASSWORD);
+
+                buyerUser = await userManager.FindByNameAsync(Constants.EMAIL_BUYER);
+                await userManager.AddToRoleAsync(buyerUser!, Constants.ROLE_BUYER);
+
+                var adminUser = new ApplicationUser { UserName = Constants.EMAIL_ADMIN, Email = Constants.EMAIL_ADMIN };
+                await userManager.CreateAsync(adminUser, Constants.DEFAULT_PASSWORD);                
+
+                adminUser = await userManager.FindByNameAsync(Constants.EMAIL_ADMIN);
+                await userManager.AddToRoleAsync(adminUser!, Constants.ROLE_ADMIN);
+                #endregion
 
                 logger.LogInformation("Seed database complete");
             }
