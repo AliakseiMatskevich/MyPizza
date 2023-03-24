@@ -1,0 +1,20 @@
+﻿@page
+@model ConfirmEmailModel
+@{
+    ViewData["Title"] = "Confirm email";
+}
+
+<h1>@ViewData["Title"]</h1>
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+@section Scripts {
+    <script>
+        function redirecttomainpage() {
+            window.location = "https://localhost:7273/Identity/Account/Login";
+        }
+
+        $(document).ready(function () {
+            setInterval(redirecttomainpage, 5000);
+        });
+    </script>
+}

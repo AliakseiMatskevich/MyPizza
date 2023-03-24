@@ -11,6 +11,9 @@ namespace MyPizza.Infrastructure.Data
         public DbSet<WeightType> WeightTypes { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartProduct> CartProducts { get; set; }
+
 
         public PizzaContext(DbContextOptions<PizzaContext> options) : base(options) { }        
     }

@@ -8,10 +8,11 @@ namespace MyPizza.Web.MappingProfile
     {
         public ProductTypeProfiles()
         {
-            CreateMap<ProductType, ProductTypeViewModel>()
+            CreateMap<ProductType, ProductViewModel>()
                 .ForMember(dto => dto.Measure, opt => opt.MapFrom(entity => entity.Category!.Measure))                
                 .ForMember(dto => dto.Price, opt => opt.MapFrom(entity => entity.Products!.FirstOrDefault()!.Price))                
-                .ForMember(dto => dto.Weight, opt => opt.MapFrom(entity => entity.Products!.FirstOrDefault()!.Weight));                   
+                .ForMember(dto => dto.Weight, opt => opt.MapFrom(entity => entity.Products!.FirstOrDefault()!.Weight))
+                .ForMember(dto => dto.Id, opt => opt.MapFrom(entity => entity.Products!.FirstOrDefault()!.Id));
         }
     }
 }

@@ -20,16 +20,28 @@ namespace MyPizza.Infrastructure.Data
         {
             _dbContext = dbContext;
         }
-        public async Task CreateAsync(T entity)
+        public async Task<T> CreateAsync(T entity)
         {
             _dbContext.Add(entity);
             await _dbContext.SaveChangesAsync();
+            return entity;
         }
 
         public async Task DeleteAsync(T entity)
         {
             _dbContext.Remove(entity);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>>? predicate = null,
+                                                    Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null)
+        {
+            IQueryable<T> query = _dbContext.Set<T>();
+            if (includes != null)
+            {
+                query = includes(query);
+            }
+            return await query.FirstOrDefaultAsync(predicate!);
         }
 
         public async Task<T?> GetByIdAsync(Guid id, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null)

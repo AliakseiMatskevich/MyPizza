@@ -13,7 +13,7 @@ namespace MyPizza.ApplicationCore.Interfaces
         Task<IList<T>> GetListAsync(Expression<Func<T, bool>>? predicate = null,
                                     Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null);
         Task<T?> GetByIdAsync(Guid id);
-        Task CreateAsync(T entity);
+        Task<T> CreateAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
     }

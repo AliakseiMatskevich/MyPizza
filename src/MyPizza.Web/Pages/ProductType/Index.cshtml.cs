@@ -4,24 +4,25 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using MyPizza.ApplicationCore.Entities;
 using MyPizza.Web.Interfaces;
 using MyPizza.Web.Models;
+using System.Security.Claims;
 
 namespace MyPizza.Web.Pages.ProducType
 {
-    [Authorize]
+    [Authorize(Roles = Infrastructure.Constants.ROLE_BUYER)]
     public class IndexModel : PageModel
     {
-        private readonly IUoWServices _services;
+        private readonly IProductTypeViewModelService _productTypeService;
 
         public ProductTypeIndexViewModel ProductTypeModel { get; set; } = new ProductTypeIndexViewModel();
 
-        public IndexModel(IUoWServices services)
+        public IndexModel(IProductTypeViewModelService productTypeService)
         {
-            _services = services;
+            _productTypeService = productTypeService;
         }
 
-        public async Task OnGet(Guid? categoryId = null)
-        {
-            ProductTypeModel = await _services.ProductType.GetProductTypesAsync(categoryId);
+        public async Task OnGet(Guid? categoryId = null, Guid? weightTypeId = null)
+        {           
+            ProductTypeModel = await _productTypeService.GetProductTypesAsync(categoryId, weightTypeId);
         }
     }
 }

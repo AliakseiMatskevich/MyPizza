@@ -15,5 +15,7 @@ namespace MyPizza.Infrastructure.Interfaces
                                     Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
                                     Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null);
         Task<T?> GetByIdAsync(Guid id, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null);
+        Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>>? predicate = null, 
+                                     Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null);
     }
 }
