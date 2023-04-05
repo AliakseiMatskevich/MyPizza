@@ -1,16 +1,19 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MyPizza.Infrastructure.Data;
 using MyPizza.Infrastructure.Data.Identity;
 using MyPizza.Web.Configuration;
+using MyPizza.Web.Services.EmailSender;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Context 
+// Add Context to container
 builder.Services.AddDbContext<PizzaContext>(context =>
         context.UseSqlServer(builder.Configuration.GetConnectionString("PizzaConnection")));
 
+#region Configure Identity
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole> (options =>
         {
@@ -19,42 +22,53 @@ builder.Services
     .AddDefaultUI()
     .AddEntityFrameworkStores<PizzaContext>()
     .AddDefaultTokenProviders();
+#endregion
 
-//Configure Identity
-//builder.Services
-//    .AddIdentity<ApplicationUser, IdentityRole>()
-//    .AddDefaultUI()
-//    .AddEntityFrameworkStores<PizzaContext>()
-//    .AddDefaultTokenProviders();
-
+#region Configure Authentication (Google)
 builder.Services.AddAuthentication()
     .AddGoogle(googleOptions =>
     {
         googleOptions.ClientId = builder.Configuration["GoogleConnection:ClientId"]!;
         googleOptions.ClientSecret = builder.Configuration["GoogleConnection:ClientSecret"]!;
+        googleOptions.Scope.Add("https://www.googleapis.com/auth/photoslibrary");
+    })
+    .AddFacebook(facebookOptions =>
+    {
+        facebookOptions.AppId = builder.Configuration["FacebookConnection:AppId"]!;
+        facebookOptions.AppSecret = builder.Configuration["FacebookConnection:AppSecret"]!;
     });
+#endregion
 
 // Add services to the container.
 builder.Services.AddRazorPages()
     .AddRazorPagesOptions(options => {
-        options.Conventions.AddPageRoute("/ProductType/Index", "") ;
+        options.Conventions.AddPageRoute("/ProductType/Index", "");
     });
+#region Configure EmailSender
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+//builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
+#endregion
+
+// Add services to the container.
 //builder.Services.AddControllersWithViews();
-builder.Services.AddCoreServices();
 
 //AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+//Add own services to the container
+builder.Services.AddCoreServices();
+
 
 
 var app = builder.Build();
 app.Logger.LogInformation("App created...");
 
-#region Migrations running
+#region Migrations running and Seed
 using (var scope = app.Services.CreateScope())
 {
     var scopedProvider = scope.ServiceProvider;
-    //try
-    //{
+    try
+    {
         var context = scopedProvider.GetRequiredService<PizzaContext>();       
         if (context.Database.IsSqlServer())
         {
@@ -63,12 +77,12 @@ using (var scope = app.Services.CreateScope())
         }
         var userManager = scopedProvider.GetRequiredService<UserManager<ApplicationUser>>();
         var roleManager = scopedProvider.GetRequiredService<RoleManager<IdentityRole>>();
-        await PizzaContextSeed.SeedAsync(context, app.Logger, userManager, roleManager);        
-    //}
-    //catch (Exception ex)
-    //{
-    //    app.Logger.LogError(ex, "An error occurred adding migrations to Database.");
-    //}
+        await PizzaContextSeed.SeedAsync(context, app.Logger, userManager, roleManager);
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogError(ex, "An error occurred adding migrations to Database.");
+    }
 }
 #endregion
 

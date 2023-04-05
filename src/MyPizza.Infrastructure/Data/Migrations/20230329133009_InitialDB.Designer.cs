@@ -12,8 +12,8 @@ using MyPizza.Infrastructure.Data;
 namespace MyPizza.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(PizzaContext))]
-    [Migration("20230313084519_AddIdentity")]
-    partial class AddIdentity
+    [Migration("20230329133009_InitialDB")]
+    partial class InitialDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -158,6 +158,44 @@ namespace MyPizza.Infrastructure.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("MyPizza.ApplicationCore.Entities.Cart", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Carts");
+                });
+
+            modelBuilder.Entity("MyPizza.ApplicationCore.Entities.CartProduct", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CartId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CartProducts");
+                });
+
             modelBuilder.Entity("MyPizza.ApplicationCore.Entities.Category", b =>
                 {
                     b.Property<Guid>("Id")
@@ -249,7 +287,7 @@ namespace MyPizza.Infrastructure.Data.Migrations
                     b.ToTable("WeightTypes");
                 });
 
-            modelBuilder.Entity("MyPizza.Infrastructure.Identity.User", b =>
+            modelBuilder.Entity("MyPizza.Infrastructure.Data.Identity.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -325,7 +363,7 @@ namespace MyPizza.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("MyPizza.Infrastructure.Identity.User", null)
+                    b.HasOne("MyPizza.Infrastructure.Data.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -334,7 +372,7 @@ namespace MyPizza.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("MyPizza.Infrastructure.Identity.User", null)
+                    b.HasOne("MyPizza.Infrastructure.Data.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -349,7 +387,7 @@ namespace MyPizza.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyPizza.Infrastructure.Identity.User", null)
+                    b.HasOne("MyPizza.Infrastructure.Data.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -358,11 +396,30 @@ namespace MyPizza.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("MyPizza.Infrastructure.Identity.User", null)
+                    b.HasOne("MyPizza.Infrastructure.Data.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPizza.ApplicationCore.Entities.CartProduct", b =>
+                {
+                    b.HasOne("MyPizza.ApplicationCore.Entities.Cart", "Cart")
+                        .WithMany()
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyPizza.ApplicationCore.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("MyPizza.ApplicationCore.Entities.Product", b =>

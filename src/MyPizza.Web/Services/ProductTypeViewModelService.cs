@@ -10,32 +10,40 @@ namespace MyPizza.Web.Services
     {
         private readonly IUoWRepository _repository;
         private readonly IMapper _mapper;
-        private readonly ICategoryViewModelService _categoryViewModelService;
+        private readonly ICategoryViewModelService _categoryService;
+        private readonly IWeightTypeViewModelService _weightTypeService;
         public ProductTypeViewModelService(IUoWRepository repository,
             IMapper mapper,
-            ICategoryViewModelService categoryViewModelService) 
+            ICategoryViewModelService categoryService,
+            IWeightTypeViewModelService weightTypeService) 
         {
             _repository = repository;
             _mapper = mapper;
-            _categoryViewModelService = categoryViewModelService;
+            _categoryService = categoryService;
+            _weightTypeService = weightTypeService;
         }
 
-        public async Task<ProductTypeIndexViewModel> GetProductTypesAsync(Guid? categoryId)
+        public async Task<ProductTypeIndexViewModel> GetProductTypesAsync(Guid? categoryId, Guid? weightTypeId)
         {
-            var categories = await _categoryViewModelService.GetCategoriesAsync();
+            var categories = await _categoryService.GetCategoriesAsync();
+            categoryId = categoryId ?? categories.FirstOrDefault()!.Id;
+
+            var weightTypes = await _weightTypeService.GetWeihgtTypesAsync(categoryId);
+            weightTypeId = weightTypes.Count > 0 ? 
+                                weightTypeId ?? weightTypes.FirstOrDefault()!.Id:
+                                default;
 
             var entities = await _repository.ProductTypes.GetListAsync(
-                predicate: categoryId == null ? x => x.CategoryId == categories.FirstOrDefault()!.Id : x => x.CategoryId == categoryId,
-                includes: x => x.Include(p => p.Category)!
-                                .Include(p => p.Products)!,
+                predicate: x => x.CategoryId == categoryId,
+                includes: x => x.Include(p => p.Category)!                                
+                                .Include(p => p.Products!.Where(x => weightTypeId != Guid.Empty ? x.WeightTypeId.Equals(weightTypeId) : true))!,
                 orderBy:  x => x.OrderBy(p => p.Category!.Name).ThenBy(p => p.Name));
-
             
-
             var vm = new ProductTypeIndexViewModel()
             {
-                ProductTypeItems = _mapper.Map<List<ProductTypeViewModel>>(entities),
-                Categories = categories
+                ProductTypeItems = _mapper.Map<List<ProductViewModel>>(entities),
+                Categories = categories,
+                WeightTypes = weightTypes
             };
             return vm;
         }

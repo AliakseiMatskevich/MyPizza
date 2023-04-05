@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyPizza.Infrastructure
 {
-    internal static class Constants
+    public static class Constants
     {
         public const string DEFAULT_PASSWORD = "Mats_1234";
         public const string ROLE_ADMIN = "Admin";

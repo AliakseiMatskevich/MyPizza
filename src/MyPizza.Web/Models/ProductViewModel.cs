@@ -2,7 +2,7 @@
 
 namespace MyPizza.Web.Models
 {
-    public class ProductTypeViewModel
+    public class ProductViewModel
     {
         public Guid Id { get; set; }
         public string? Name { get; set; }
@@ -11,6 +11,5 @@ namespace MyPizza.Web.Models
         public decimal Price { get; set; }
         public int Weight { get; set; }
         public string? Measure { get; set; }
-        public IList<Product>? Products { get; set; }
     }
 }
