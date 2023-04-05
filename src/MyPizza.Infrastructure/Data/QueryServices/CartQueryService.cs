@@ -17,16 +17,19 @@ namespace MyPizza.Infrastructure.Data.QueryServices
             _dbContext = dbContext;
         }
 
-        public async Task<int> CountCartProductsAsync(Guid? userId)
+        public async Task<int> CountCartProductsAsync(Guid userId)
         {
-            if (userId == null)
+            if (userId == Guid.Empty)
             {
                 return 0;
             }
-            var total = await _dbContext.Carts
-                .Where(x => x.UserId == userId)
-                .SelectMany(y => y.Products)
-                .SumAsync(i => i.Quantity);
+
+            var total = await _dbContext.Carts.Where(x  => x.UserId == userId).
+                        Join(_dbContext.CartProducts, c => c.Id, cp => cp.CartId, (c, cp) => cp.Quantity).SumAsync();
+            //var total = await _dbContext.Carts
+            //    .Where(x => x.UserId == userId)
+            //    .SelectMany(y => y.Products)
+            //    .SumAsync(i => i.Quantity);
 
             return total;
         }

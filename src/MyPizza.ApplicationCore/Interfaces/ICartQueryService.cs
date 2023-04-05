@@ -8,6 +8,6 @@ namespace MyPizza.ApplicationCore.Interfaces
 {
     public interface ICartQueryService
     {
-        Task<int> CountCartProductsAsync(Guid? userId);
+        Task<int> CountCartProductsAsync(Guid userId);
     }
 }

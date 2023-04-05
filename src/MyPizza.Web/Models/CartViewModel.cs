@@ -4,11 +4,11 @@
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
-        public List<CartItemViewModel> Items { get; set; } = new List<CartItemViewModel>();
+        public List<CartProductViewModel> Products { get; set; } = new List<CartProductViewModel>();
 
         public decimal Sum()
         {
-            return Math.Round(Items.Sum(x => x.Price * x.Quantity), 2);
+            return Math.Round(Products.Sum(x => x.Price * x.Quantity), 2);
         }
     }
 }

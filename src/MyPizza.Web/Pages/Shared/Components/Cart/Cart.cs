@@ -9,15 +9,15 @@ namespace MyPizza.Web.Pages.Shared.Components.Cart
 {
     public class Cart: ViewComponent
     {
-        private readonly ICartQueryService _cartQueryService;
+        private readonly ICartViewModelService _cartService;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IUserService _userService;
 
-        public Cart(ICartQueryService cartQueryService,
+        public Cart(ICartViewModelService cartService,
                     SignInManager<ApplicationUser> signInManager,
                     IUserService userService)
         {
-            _cartQueryService = cartQueryService;
+            _cartService = cartService;
             _signInManager = signInManager;
             _userService = userService;
         }
@@ -27,7 +27,7 @@ namespace MyPizza.Web.Pages.Shared.Components.Cart
             var userId = _userService.GetUserId(HttpContext.User)!;
             var vm = new CartComponentViewModel 
             { 
-                ItemsCount = await _cartQueryService.CountCartProductsAsync(userId) 
+                ItemsCount = await _cartService.CountCartProductsAsync(userId) 
             };
             return View(vm);
         }

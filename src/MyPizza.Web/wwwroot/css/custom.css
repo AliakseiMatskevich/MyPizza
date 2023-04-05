@@ -7,3 +7,16 @@
 .auth-border {
     border-color:#999;
 }
+
+.cart-image {
+    width: 80%;
+}
+
+.cart-product{
+    margin-bottom:25px;
+    font-size: 20px;
+}
+
+.cart-btn-add-delete {
+    width:50px;
+}

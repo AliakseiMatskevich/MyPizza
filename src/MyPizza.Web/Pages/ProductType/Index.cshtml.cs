@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace MyPizza.Web.Pages.ProducType
 {
-    [Authorize(Roles = Infrastructure.Constants.ROLE_BUYER)]
+    //[Authorize(Roles = Infrastructure.Constants.ROLE_BUYER)]
     public class IndexModel : PageModel
     {
         private readonly IProductTypeViewModelService _productTypeService;

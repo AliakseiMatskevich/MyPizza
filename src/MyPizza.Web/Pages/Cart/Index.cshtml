@@ -2,3 +2,61 @@
 @model MyPizza.Web.Pages.Cart.IndexModel
 @{
 }
+
+<div class="container">
+    @if (Model.CartModel.Products.Count == 0)
+    {   
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <img src="~/Images/emptycart.png" width="100%">
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row justify-content-center">
+            <div class="col-md-2 offset-md-2">
+                <img class="cart-image" src="~/Images/cartimage.webp" alt="cartimage">
+            </div>
+            <div class="col-md fw-bold d-flex align-items-center fs-1">
+                Total amount: &nbsp; &#36; @Model.CartModel.Sum()
+            </div>            
+        </div>
+        foreach(var product in Model.CartModel.Products)
+        {
+            <div class="row cart-product d-flex align-items-center fw-light">
+                <div class="col-md-1 offset-md-2">
+                    <img class="cart-image" src="@product.PictureUrl" alt="image @product.Name">
+                </div>
+                <div class="col-md-2">
+                    @product.Name
+                </div>                
+                <div class="col-md-1">
+                    &#36;@product.Price
+                </div>
+                <div class="col-md-1">
+                    @product.Weight @product.Measure
+                </div>
+                <div class="col-md-1">
+                    @product.Quantity
+                </div>
+                <div class="col-md-1">
+                    <form asp-page-handler="Delete" method="post">
+                        <input hidden name="productId" value="@product.ProductId">
+                        <button type="submit" class="btn btn-outline-danger cart-btn-add-delete">
+                            <span class="fs-3">-</span>
+                        </button>
+                    </form>
+                </div>
+                <div class="col-md-1">
+                    <form asp-page-handler="Add" method="post">
+                        <input hidden name="productId" value="@product.ProductId">
+                        <button type="submit" class="btn btn-outline-success cart-btn-add-delete">
+                            <span class="fs-3">+</span>
+                        </button>
+                    </form>                   
+                </div>                
+            </div>
+        }
+    }
+</div>

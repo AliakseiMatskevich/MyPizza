@@ -13,5 +13,7 @@ namespace MyPizza.Infrastructure.Interfaces
         IEFRepository<Product> Products { get; }
         IEFRepository<ProductType> ProductTypes { get; }
         IEFRepository<WeightType> WeightTypes { get; }
+        IEFRepository<Cart> Carts { get; }
+        IEFRepository<CartProduct> CartProducts { get; }
     }
 }

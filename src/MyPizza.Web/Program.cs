@@ -42,21 +42,22 @@ builder.Services.AddAuthentication()
 // Add services to the container.
 builder.Services.AddRazorPages()
     .AddRazorPagesOptions(options => {
-        options.Conventions.AddPageRoute("/ProductType/Index", "") ;
+        options.Conventions.AddPageRoute("/ProductType/Index", "");
     });
 #region Configure EmailSender
 builder.Services.AddTransient<IEmailSender, EmailSender>();
-builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
+//builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 #endregion
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+//builder.Services.AddControllersWithViews();
+
+//AutoMapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 //Add own services to the container
 builder.Services.AddCoreServices();
 
-//AutoMapper
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
 var app = builder.Build();
@@ -101,9 +102,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
 app.Logger.LogDebug("Starting the app...");

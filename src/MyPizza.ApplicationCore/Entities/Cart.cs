@@ -10,7 +10,7 @@ namespace MyPizza.ApplicationCore.Entities
     public sealed class Cart : BaseEntity
     {
         public Guid UserId { get; set; }
-        public readonly List<CartProduct> Products = new List<CartProduct>();
+        public List<CartProduct> Products { get; set; } = new List<CartProduct>();
 
         public Cart()
         {            
@@ -30,6 +30,22 @@ namespace MyPizza.ApplicationCore.Entities
             }
            
             existingItem.EncreaseQuantity();
+        }
+
+        public void DeleteProduct(Guid productId)
+        {
+            var existingItem = Products.FirstOrDefault(i => i.ProductId == productId);
+            if (existingItem is null)
+            {
+                return;
+            }
+
+            existingItem.DecreaseQuantity();
+
+            if (existingItem.Quantity == 0)
+            {
+                Products.Remove(existingItem);
+            }
         }
     }
 }

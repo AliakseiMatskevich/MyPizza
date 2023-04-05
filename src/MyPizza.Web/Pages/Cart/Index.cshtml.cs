@@ -2,11 +2,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MyPizza.ApplicationCore.Interfaces;
-using MyPizza.Infrastructure.Data;
 using MyPizza.Infrastructure.Interfaces;
 using MyPizza.Web.Interfaces;
-using System.Data;
-using System.Security.Claims;
+using MyPizza.Web.Models;
 
 namespace MyPizza.Web.Pages.Cart
 {
@@ -16,29 +14,54 @@ namespace MyPizza.Web.Pages.Cart
         private readonly IUoWRepository _repository;
         private readonly IUserService _userService;
         private readonly ICartService _cartService;
-        public IndexModel(IUoWRepository repository, 
+        private readonly ICartViewModelService _cartViewModelService;
+
+        public IndexModel(IUoWRepository repository,
                           IUserService userService,
-                          ICartService cartService)
+                          ICartService cartService,
+                          ICartViewModelService cartViewModelService)
         {
             _repository = repository;
             _userService = userService;
             _cartService = cartService;
-        }
-        public void OnGet()
-        {
+            _cartViewModelService = cartViewModelService;
         }
 
-        public async Task<IActionResult> OnPost(Guid productId)
+        public CartViewModel CartModel { get; set; } = new CartViewModel();
+
+        public async Task OnGet()
+        {
+            var userId = _userService.GetUserId(Request.HttpContext.User);
+
+            CartModel = await _cartViewModelService.GetOrCreateCartForUser(userId);
+        }
+
+        public async Task<IActionResult> OnPostAdd(Guid productId)
         {
             var product = await _repository.Products.GetByIdAsync(productId);
             if (product == null)
             {
                 return RedirectToPage("/ProductType/Index");
             }
-           
+
             var userId = _userService.GetUserId(Request.HttpContext.User);
 
-            var cart = await _cartService.AddProductToCart(userId, productId);           
+            var cart = await _cartService.AddProductToCart(userId, productId);
+
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostDelete(Guid productId)
+        {
+            var product = await _repository.Products.GetByIdAsync(productId);
+            if (product == null)
+            {
+                return RedirectToPage("/ProductType/Index");
+            }
+
+            var userId = _userService.GetUserId(Request.HttpContext.User);
+
+            var cart = await _cartService.DeleteProductFromCart(userId, productId);
 
             return RedirectToPage();
         }

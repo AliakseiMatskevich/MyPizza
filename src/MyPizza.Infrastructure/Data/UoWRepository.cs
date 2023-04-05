@@ -9,17 +9,23 @@ namespace MyPizza.Infrastructure.Data
         public IEFRepository<Product> Products { get; }
         public IEFRepository<ProductType> ProductTypes { get; }
         public IEFRepository<WeightType> WeightTypes { get; }
+        public IEFRepository<Cart> Carts { get; }
+        public IEFRepository<CartProduct> CartProducts { get; }
 
         public UoWRepository(
             IEFRepository<Category> categories,
             IEFRepository<Product> products,
             IEFRepository<ProductType> productTypes,
-            IEFRepository<WeightType> weightTypes)
+            IEFRepository<WeightType> weightTypes,
+            IEFRepository<Cart> carts,
+            IEFRepository<CartProduct> cartProducts)
         {
             Categories = categories;
             Products = products;
             ProductTypes = productTypes;
             WeightTypes = weightTypes;
+            Carts = carts;
+            CartProducts = cartProducts;
         }
     }
 }
