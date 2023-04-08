@@ -12,8 +12,8 @@ using MyPizza.Infrastructure.Data;
 namespace MyPizza.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(PizzaContext))]
-    [Migration("20230329133009_InitialDB")]
-    partial class InitialDB
+    [Migration("20230408201142_InitialDb")]
+    partial class InitialDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -215,6 +215,72 @@ namespace MyPizza.Infrastructure.Data.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("MyPizza.ApplicationCore.Entities.Order", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AppartmentNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BuildingNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<decimal>("Sum")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("MyPizza.ApplicationCore.Entities.OrderProduct", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderProducts");
+                });
+
             modelBuilder.Entity("MyPizza.ApplicationCore.Entities.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -406,7 +472,7 @@ namespace MyPizza.Infrastructure.Data.Migrations
             modelBuilder.Entity("MyPizza.ApplicationCore.Entities.CartProduct", b =>
                 {
                     b.HasOne("MyPizza.ApplicationCore.Entities.Cart", "Cart")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -418,6 +484,25 @@ namespace MyPizza.Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Cart");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("MyPizza.ApplicationCore.Entities.OrderProduct", b =>
+                {
+                    b.HasOne("MyPizza.ApplicationCore.Entities.Order", "Order")
+                        .WithMany("OrderFood")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyPizza.ApplicationCore.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
 
                     b.Navigation("Product");
                 });
@@ -459,11 +544,21 @@ namespace MyPizza.Infrastructure.Data.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("MyPizza.ApplicationCore.Entities.Cart", b =>
+                {
+                    b.Navigation("Products");
+                });
+
             modelBuilder.Entity("MyPizza.ApplicationCore.Entities.Category", b =>
                 {
                     b.Navigation("ProductTypes");
 
                     b.Navigation("WeightTypes");
+                });
+
+            modelBuilder.Entity("MyPizza.ApplicationCore.Entities.Order", b =>
+                {
+                    b.Navigation("OrderFood");
                 });
 
             modelBuilder.Entity("MyPizza.ApplicationCore.Entities.ProductType", b =>
