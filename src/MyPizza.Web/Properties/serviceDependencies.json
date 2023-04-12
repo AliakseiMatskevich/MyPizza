@@ -2,8 +2,7 @@
   "dependencies": {
     "mssql1": {
       "type": "mssql",
-      "connectionId": "ConnectionStrings:PizzaConnection",
-      "dynamicId": null
+      "connectionId": "ConnectionStrings:PizzaConnection"
     }
   }
 }
