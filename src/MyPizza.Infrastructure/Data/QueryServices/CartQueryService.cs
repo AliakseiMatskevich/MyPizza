@@ -24,12 +24,8 @@ namespace MyPizza.Infrastructure.Data.QueryServices
                 return 0;
             }
 
-            var total = await _dbContext.Carts.Where(x  => x.UserId == userId).
+            var total = await _dbContext.Carts.Where(x => x.UserId == userId).
                         Join(_dbContext.CartProducts, c => c.Id, cp => cp.CartId, (c, cp) => cp.Quantity).SumAsync();
-            //var total = await _dbContext.Carts
-            //    .Where(x => x.UserId == userId)
-            //    .SelectMany(y => y.Products)
-            //    .SumAsync(i => i.Quantity);
 
             return total;
         }

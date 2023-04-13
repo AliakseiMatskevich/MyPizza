@@ -9,8 +9,8 @@ namespace MyPizza.ApplicationCore.Interfaces
 {
     public interface ICartService
     {
-        Task<Cart> AddProductToCart(Guid userId, Guid productId);
-        Task<Cart> DeleteProductFromCart(Guid userId, Guid productId);
-        Task<Cart> CreateCart(Guid userId);
+        Task<Cart> AddProductToCartAsync(Guid userId, Guid productId);
+        Task<Cart> DeleteProductFromCartAsync(Guid userId, Guid productId);
+        Task<Cart> CreateCartAsync(Guid userId);
     }
 }

@@ -45,7 +45,7 @@ namespace MyPizza.Web.Pages.Cart
             }
 
             var userId = _userService.GetUserId(Request.HttpContext.User);
-            var cart = await _cartService.AddProductToCart(userId, productId);
+            var cart = await _cartService.AddProductToCartAsync(userId, productId);
 
             return RedirectToPage();
         }
@@ -60,7 +60,7 @@ namespace MyPizza.Web.Pages.Cart
 
             var userId = _userService.GetUserId(Request.HttpContext.User);
 
-            var cart = await _cartService.DeleteProductFromCart(userId, productId);
+            var cart = await _cartService.DeleteProductFromCartAsync(userId, productId);
 
             return RedirectToPage();
         }

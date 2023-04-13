@@ -42,7 +42,7 @@ namespace MyPizza.Web.Services
 
             if (cart == null)
             {
-                cart = await _cartService.CreateCart(userId);
+                cart = await _cartService.CreateCartAsync(userId);
             }
 
             var cartModel = _mapper.Map<CartViewModel>(cart);
