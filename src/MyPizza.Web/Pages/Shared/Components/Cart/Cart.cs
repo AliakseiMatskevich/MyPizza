@@ -27,7 +27,7 @@ namespace MyPizza.Web.Pages.Shared.Components.Cart
             var userId = _userService.GetUserId(HttpContext.User)!;
             var vm = new CartComponentViewModel 
             { 
-                ItemsCount = await _cartService.CountCartProductsAsync(userId) 
+                ProductsCount = await _cartService.CountCartProductsAsync(userId) 
             };
             return View(vm);
         }

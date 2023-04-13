@@ -2,6 +2,6 @@
 {
     public class CartComponentViewModel
     {
-        public int ItemsCount { get; set; }
+        public int ProductsCount { get; set; }
     }
 }
