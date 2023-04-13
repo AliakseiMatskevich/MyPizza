@@ -1,0 +1,22 @@
+﻿.auth-signature-text {
+    font-family: 'Open Sans',Arial,Helvetica Neue,Helvetica,sans-serif;
+    font-size: 13px;
+    color: #999;
+}
+
+.auth-border {
+    border-color:#999;
+}
+
+.cart-image {
+    width: 80%;
+}
+
+.cart-product{
+    margin-bottom:25px;
+    font-size: 20px;
+}
+
+.cart-btn-add-delete {
+    width:50px;
+}

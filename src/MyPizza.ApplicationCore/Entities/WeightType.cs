@@ -1,0 +1,18 @@
+﻿using MyPizza.ApplicationCore.Entities.Abstracts;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MyPizza.ApplicationCore.Entities
+{
+    public sealed class WeightType : BaseEntity
+    {
+        public Guid? CategoryId { get; set; }
+        public Category? Category { get; set; }
+        [MaxLength(15)]
+        public string? Name { get; set; }
+    }
+}
