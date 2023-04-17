@@ -19,6 +19,9 @@ namespace MyPizza.ApplicationCore.Attributes
         {
             Regex regex = new(@"\d+[a-z]*/*\d*");
             string? buildingNumber = value as string;
+            if (buildingNumber is null)
+                return false;
+
             var match = regex.Match(buildingNumber!);
             if (match.Success)
                 return match.Value.Equals(buildingNumber);

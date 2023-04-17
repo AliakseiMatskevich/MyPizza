@@ -20,17 +20,35 @@ namespace MyPizza.Web.Services
         {
             _repository = repository;
         }
-        public async Task<Cart> AddProductToCartAsync(Guid userId, Guid productId)
+
+        private async Task<Cart> GetCartAsync(Guid userId)
         {
             var cart = await _repository.Carts.FirstOrDefaultAsync(predicate: x => x.UserId.Equals(userId),
                                                                  includes: x => x.Include(p => p.Products));
 
             if (cart == null)
             {
-                cart = await CreateCartAsync(userId);                
+                cart = await CreateCartAsync(userId);
             }
 
+            return cart;
+        }
+
+        public async Task<Cart> AddProductToCartAsync(Guid userId, Guid productId)
+        {
+            var cart = await GetCartAsync(userId);
+
             cart.AddProduct(productId);
+            await _repository.Carts.UpdateAsync(cart);
+
+            return cart;
+        }
+
+        public async Task<Cart> ClearCartAsync(Guid userId)
+        {
+            var cart = await GetCartAsync(userId);
+
+            cart.ClearCart();
             await _repository.Carts.UpdateAsync(cart);
 
             return cart;
@@ -44,14 +62,7 @@ namespace MyPizza.Web.Services
 
         public async Task<Cart> DeleteProductFromCartAsync(Guid userId, Guid productId)
         {
-            var cart = await _repository.Carts.FirstOrDefaultAsync(predicate: x => x.UserId.Equals(userId),
-                                                                 includes: x => x.Include(p => p.Products));
-
-            if (cart == null)
-            {
-                cart = new Cart(userId);
-                cart = await _repository.Carts.CreateAsync(cart);
-            }
+            var cart = await GetCartAsync(userId);
 
             cart.DeleteProduct(productId);
             await _repository.Carts.UpdateAsync(cart);

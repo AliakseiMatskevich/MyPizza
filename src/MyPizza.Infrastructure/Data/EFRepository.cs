@@ -34,14 +34,21 @@ namespace MyPizza.Infrastructure.Data
         }
 
         public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>>? predicate = null,
+                                                    Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
                                                     Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null)
         {
             IQueryable<T> query = _dbContext.Set<T>();
+            if (predicate is not null)
+            {
+                query = query.Where(predicate);
+            }
+
             if (includes != null)
             {
                 query = includes(query);
             }
-            return await query.FirstOrDefaultAsync(predicate!);
+
+            return orderBy is null ? await query.FirstOrDefaultAsync() : await orderBy(query).FirstOrDefaultAsync();
         }
 
         public async Task<T?> GetByIdAsync(Guid id, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null)

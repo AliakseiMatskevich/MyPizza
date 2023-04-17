@@ -12,5 +12,6 @@ namespace MyPizza.ApplicationCore.Interfaces
         Task<Cart> AddProductToCartAsync(Guid userId, Guid productId);
         Task<Cart> DeleteProductFromCartAsync(Guid userId, Guid productId);
         Task<Cart> CreateCartAsync(Guid userId);
+        Task<Cart> ClearCartAsync(Guid userId);
     }
 }

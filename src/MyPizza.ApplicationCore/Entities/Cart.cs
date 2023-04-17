@@ -47,5 +47,10 @@ namespace MyPizza.ApplicationCore.Entities
                 Products.Remove(existingItem);
             }
         }
+
+        public void ClearCart()
+        {
+            Products.Clear();
+        }
     }
 }

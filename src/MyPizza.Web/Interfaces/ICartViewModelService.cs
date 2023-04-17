@@ -4,7 +4,7 @@ namespace MyPizza.Web.Interfaces
 {
     public interface ICartViewModelService
     {
-        Task<CartViewModel> GetOrCreateCartForUser(Guid userId);
+        Task<TViewModel> GetOrCreateCartForUserAsync<TViewModel>(Guid userId);
         Task<int> CountCartProductsAsync(Guid userId);
     }
 }
