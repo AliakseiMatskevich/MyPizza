@@ -31,7 +31,7 @@ namespace MyPizza.Web.Services
             return amount;
         }
 
-        public async Task<CartViewModel> GetOrCreateCartForUser(Guid userId)
+        public async Task<TViewModel> GetOrCreateCartForUserAsync<TViewModel>(Guid userId)
         {
             var cart = await _repository.Carts.FirstOrDefaultAsync(
                 predicate: x => x.UserId == userId,
@@ -45,7 +45,7 @@ namespace MyPizza.Web.Services
                 cart = await _cartService.CreateCartAsync(userId);
             }
 
-            var cartModel = _mapper.Map<CartViewModel>(cart);
+            var cartModel = _mapper.Map<TViewModel>(cart);
 
             return cartModel;
         }

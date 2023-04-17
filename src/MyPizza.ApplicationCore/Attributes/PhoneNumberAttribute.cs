@@ -20,6 +20,10 @@ namespace MyPizza.ApplicationCore.Attributes
         {
             Regex regex = new(@"\+\d{3}[\s\-]*\d{2}[\s\-]*\d{3}[\s\-]*\d{2}[\s\-]*\d{2}");
             string? phoneNumber = value as string;
+
+            if (phoneNumber is null)
+                return false;
+
             var match = regex.Match(phoneNumber!);
             if (match.Success)
                 return match.Value.Equals(phoneNumber);

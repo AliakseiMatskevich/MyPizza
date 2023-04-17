@@ -1,29 +1,32 @@
-﻿using MyPizza.ApplicationCore.Attributes;
-using MyPizza.ApplicationCore.Entities.Abstracts;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
+using MyPizza.ApplicationCore.Attributes;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MyPizza.ApplicationCore.Entities
+namespace MyPizza.Web.Models
 {
-    public sealed class Order : BaseEntity
+    public sealed class OrderViewModel
     {
         public Guid UserId { get; set; }
-        [EmailAddress]
+        [EmailAddress, Required(ErrorMessage = "Email is required")]
         public string? Email { get; set; }
         [Required(ErrorMessage = "Street is required"), StringLength(20, ErrorMessage = "Must be between 4 and 20 characters long", MinimumLength = 4)]
         public string? Street { get; set; }
         [BuildingNumber, Required(ErrorMessage = "BuildingNumber is required")]
         public string? BuildingNumber { get; set; }
-        [AppartmentNumber]
+        [AppartmentNumber, Required(ErrorMessage = "Appartment number is required")]
         public string? AppartmentNumber { get; set; }
         [PhoneNumber, Required(ErrorMessage = "Phone number is required")]
         public string? PhoneNumber { get; set; }
-        public decimal Sum { get; set; }
         public DateTime Date { get; set; }
-        public IList<OrderProduct> Products { get; set; } = new List<OrderProduct>();
+        public List<OrderProductViewModel> Products { get; set; } = new List<OrderProductViewModel>();
+
+        public OrderViewModel()
+        {
+            Date = DateTime.Now;
+        }
+        public decimal Sum()
+        {
+            return Math.Round(Products.Sum(x => x.Price * x.Quantity), 2);
+        }
     }
 }

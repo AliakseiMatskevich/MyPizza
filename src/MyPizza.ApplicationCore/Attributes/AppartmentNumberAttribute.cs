@@ -20,6 +20,10 @@ namespace MyPizza.ApplicationCore.Attributes
         {
             Regex regex = new(@"\d+[a-z]*");
             string? appartmentNumber = value as string;
+
+            if (appartmentNumber is null)
+                return false;
+
             var match = regex.Match(appartmentNumber!);
             if (match.Success)
                 return match.Value.Equals(appartmentNumber);

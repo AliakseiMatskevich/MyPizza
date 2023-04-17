@@ -33,7 +33,7 @@ namespace MyPizza.Web.Pages.Cart
         {
             var userId = _userService.GetUserId(Request.HttpContext.User);
 
-            CartModel = await _cartViewModelService.GetOrCreateCartForUser(userId);
+            CartModel = await _cartViewModelService.GetOrCreateCartForUserAsync<CartViewModel>(userId);
         }
 
         public async Task<IActionResult> OnPostAdd(Guid productId)
