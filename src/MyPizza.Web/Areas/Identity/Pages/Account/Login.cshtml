@@ -10,8 +10,9 @@
 <div class="row">
     <div class="col-md-4 offset-md-4 border border-1 auth-border rounded-3">
         <h1>@ViewData["Title"]</h1>
-        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post"
+        <form id="external-account" asp-page="./ExternalLogin" method="post"
             class="form-horizontal">
+            @*asp-route-returnUrl="@Model.ReturnUrl"*@
             <div class="auth-signature-text">Using social media</div>
             <div class="input-group mb-3">
                 <button type="submit" name="provider" class="btn text-white w-50" style="background-color: #dd4b39;"

@@ -47,7 +47,7 @@ namespace MyPizza.Web.Pages.Order
             {
                 await _orderViewModelService.CreateOrderAsync(OrderModel);
                 await _cartService.ClearCartAsync(OrderModel.UserId);
-                return RedirectToPage("/Cart/Index");
+                return RedirectToPage("/Order/OrderConfirmed");
             }
 
             return Page();

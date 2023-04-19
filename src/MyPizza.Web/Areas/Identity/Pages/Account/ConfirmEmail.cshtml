@@ -8,13 +8,5 @@
 <partial name="_StatusMessage" model="Model.StatusMessage" />
 
 @section Scripts {
-    <script>
-        function redirecttomainpage() {            
-            window.location = "/Identity/Account/Login";
-        }
-
-        $(document).ready(function () {
-            setInterval(redirecttomainpage, 5000);
-        });
-    </script>
+    <script src="~/js/ConfirmEmail.js"></script>
 }

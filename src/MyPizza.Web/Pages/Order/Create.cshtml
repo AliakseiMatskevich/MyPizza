@@ -46,17 +46,23 @@
             <div class="col-md-6">
                 <div class="row justify-content-center">
                     <div class="col-md-2">
-                        <img class="cart-image" src="~/Images/cartimage.webp" alt="cartimage">
+                        <img class="cart-image" src="~/images/cartimage.webp" alt="cartimage">
                     </div>
                     <div class="col-md fw-bold d-flex align-items-center fs-2">
                         Total amount: &nbsp; &#36; @Model.OrderModel.Sum()
                     </div>
                 </div>
                 @foreach (var product in Model.OrderModel.Products.Select((value, i) => new { i, value }))
-                {
+                {                    
                     <input hidden name="OrderModel.Products[@product.i].ProductId" value="@Model.OrderModel.Products[product.i].ProductId">
-                    <input hidden name="OrderModel.Products[@product.i].Quantity" value="@Model.OrderModel.Products[product.i].Quantity">
+                    <input hidden name="OrderModel.Products[@product.i].PictureUrl" value="@Model.OrderModel.Products[product.i].PictureUrl">
+                    <input hidden name="OrderModel.Products[@product.i].Name" value="@Model.OrderModel.Products[product.i].Name">
                     <input hidden name="OrderModel.Products[@product.i].Price" value="@Model.OrderModel.Products[product.i].Price">
+                    <input hidden name="OrderModel.Products[@product.i].Weight" value="@Model.OrderModel.Products[product.i].Weight">
+                    <input hidden name="OrderModel.Products[@product.i].Measure" value="@Model.OrderModel.Products[product.i].Measure">
+                    <input hidden name="OrderModel.Products[@product.i].Quantity" value="@Model.OrderModel.Products[product.i].Quantity">
+                    
+
                     @*Add hidden fields for another element which we need to display after error checking*@ 
                     <div class="row cart-product d-flex align-items-center fw-light">                        
                         <div class="col-md-2">

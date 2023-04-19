@@ -5,21 +5,29 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
-        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+        <a id="manage" class="nav-link text-success" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+            <img src="/images/user.png" alt="login" width="35"> @UserManager.GetUserName(User)
+        </a>
     </li>
     <li class="nav-item">
-        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
-            <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
+        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" >
+                <button id="logout" type="submit" class="nav-link btn btn-link text-danger border-0">
+                Logout&nbsp;<img src="/images/logout.png" alt="logout" width="30">
+            </button>
         </form>
     </li>
 }
 else
 {
     <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        <a class="nav-link text-secondary" id="register" asp-area="Identity" asp-page="/Account/Register">
+            <img src="/images/register.png" alt="register" width="35">&nbsp;Register
+        </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        <a class="nav-link text-success" id="login" asp-area="Identity" asp-page="/Account/Login">
+            <img src="/images/login.png" alt="login" width="35"> Login
+        </a>
     </li>
 }
 </ul>
