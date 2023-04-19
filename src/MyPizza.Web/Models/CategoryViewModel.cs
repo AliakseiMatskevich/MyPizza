@@ -1,8 +1,8 @@
-﻿namespace MyPizza.Web.Models
+﻿using MyPizza.Web.Models.AbstractViewModel;
+
+namespace MyPizza.Web.Models
 {
-    public class CategoryViewModel
+    public class CategoryViewModel : NavLinkViewModel
     {
-        public Guid Id { get; set; }
-        public string? Name { get; set; }
     }
 }

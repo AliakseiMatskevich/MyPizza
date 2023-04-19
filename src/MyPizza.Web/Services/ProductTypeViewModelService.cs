@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MyPizza.Infrastructure.Interfaces;
+using MyPizza.Web.Extentions;
 using MyPizza.Web.Interfaces;
 using MyPizza.Web.Models;
+using System.Collections.Generic;
 
 namespace MyPizza.Web.Services
 {
@@ -26,17 +28,15 @@ namespace MyPizza.Web.Services
         public async Task<ProductTypeIndexViewModel> GetProductTypesAsync(Guid? categoryId, Guid? weightTypeId)
         {
             var categories = await _categoryService.GetCategoriesAsync();
-            categoryId = categoryId ?? categories.FirstOrDefault()!.Id;
+            categoryId = categories.SetActiveItem(categoryId);
 
             var weightTypes = await _weightTypeService.GetWeihgtTypesAsync(categoryId);
-            weightTypeId = weightTypes.Count > 0 ? 
-                                weightTypeId ?? weightTypes.FirstOrDefault()!.Id:
-                                default;
+            weightTypeId = weightTypes.SetActiveItem(weightTypeId);
 
             var entities = await _repository.ProductTypes.GetListAsync(
                 predicate: x => x.CategoryId == categoryId,
                 includes: x => x.Include(p => p.Category)!                                
-                                .Include(p => p.Products!.Where(x => weightTypeId != Guid.Empty ? x.WeightTypeId.Equals(weightTypeId) : true))!,
+                                .Include(p => p.Products!.Where(x => weightTypeId == Guid.Empty || x.WeightTypeId.Equals(weightTypeId)))!,
                 orderBy:  x => x.OrderBy(p => p.Category!.Name).ThenBy(p => p.Name));
             
             var vm = new ProductTypeIndexViewModel()
