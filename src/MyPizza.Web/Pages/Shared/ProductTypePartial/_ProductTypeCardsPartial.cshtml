@@ -6,13 +6,11 @@
             @foreach (var item in Model)
             {
                 <div class="col-md-3">
-                    <div class="card h-100 mb-10 border-2 rounded-3" style="margin: 5px; width: 300px">
-                        <div class="card-body">
-                           @* <a class="text-decoration-none" asp-page="Index">*@
-                                <img src="/@item.PictureUrl" class="card-img-top" alt="photo">
-                                <h6 class="card-title">@item.Name</h6>
-                                <p class="card-text">@item.Description</p>
-                           @* </a>*@
+                    <div class="card h-100 mb-10 border-2 rounded-3" style="width: 240px">
+                        <div class="card-body">                           
+                            <img src="/@item.PictureUrl" class="card-img-top" alt="photo">
+                            <h6 class="card-title">@item.Name</h6>
+                            <p class="card-text">@item.Description</p>                         
                         </div>
                         <div class="card-footer d-flex justify-content-around">
                             <div class="card-text">
@@ -26,7 +24,7 @@
                                     <input type="hidden" name="productId" value="@item.Id" />
                                     <button type="submit" class="btn btn-primary btn-sm">
                                         <i class="bi"></i>
-                                        ADD TO CART
+                                        TO CART
                                     </button>
                                 </form>
                             </div>
