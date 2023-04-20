@@ -13,26 +13,31 @@ namespace MyPizza.Web.Services
         private readonly IUoWRepository _repository;
         private readonly IMapper _mapper;
         private readonly ICartService _cartService;
+        private readonly ILogger<CartViewModelService> _logger;
 
         public CartViewModelService(ICartQueryService cartQueryService,
                                     IUoWRepository repository,
                                     IMapper mapper,
-                                    ICartService cartService)
+                                    ICartService cartService,
+                                    ILogger<CartViewModelService> logger)
         {
             this._cartQueryService = cartQueryService;
             _repository = repository;
             _mapper = mapper;
             _cartService = cartService;
+            _logger = logger;
         }
 
         public async Task<int> CountCartProductsAsync(Guid userId)
         {
+            _logger.LogInformation($"User with id {userId} got products amount in cart");
             var amount = await _cartQueryService.CountCartProductsAsync(userId);
             return amount;
         }
 
         public async Task<TViewModel> GetOrCreateCartForUserAsync<TViewModel>(Guid userId)
         {
+            _logger.LogInformation($"User with id {userId} get cart");
             var cart = await _repository.Carts.FirstOrDefaultAsync(
                 predicate: x => x.UserId == userId,
                 includes: x => x.Include(p => p.Products)
@@ -40,10 +45,7 @@ namespace MyPizza.Web.Services
                                 .ThenInclude(x => x!.ProductType!)
                                 .ThenInclude(x => x.Category!));
 
-            if (cart == null)
-            {
-                cart = await _cartService.CreateCartAsync(userId);
-            }
+            cart ??= await _cartService.CreateCartAsync(userId);
 
             var cartModel = _mapper.Map<TViewModel>(cart);
 

@@ -15,22 +15,27 @@ namespace MyPizza.Web.Pages.Cart
         private readonly IUserService _userService;
         private readonly ICartService _cartService;
         private readonly ICartViewModelService _cartViewModelService;
+        private readonly ILogger<IndexModel> _logger;
 
         public IndexModel(IUoWRepository repository,
                           IUserService userService,
                           ICartService cartService,
-                          ICartViewModelService cartViewModelService)
+                          ICartViewModelService cartViewModelService,
+                          ILogger<IndexModel> logger)
         {
             _repository = repository;
             _userService = userService;
             _cartService = cartService;
             _cartViewModelService = cartViewModelService;
+            _logger = logger;
         }
 
         public CartViewModel CartModel { get; set; } = new CartViewModel();
 
         public async Task OnGet()
         {
+            _logger.LogInformation($"{Request.HttpContext.User.Identity!.Name ?? "Unautorised user"} visited cart index page");
+
             var userId = _userService.GetUserId(Request.HttpContext.User);
 
             CartModel = await _cartViewModelService.GetOrCreateCartForUserAsync<CartViewModel>(userId);
@@ -44,8 +49,10 @@ namespace MyPizza.Web.Pages.Cart
                 return RedirectToPage("/ProductType/Index");
             }
 
+            _logger.LogInformation($"{Request.HttpContext.User.Identity!.Name ?? "Unautorised user"} added product {productId} to cart");
+
             var userId = _userService.GetUserId(Request.HttpContext.User);
-            var cart = await _cartService.AddProductToCartAsync(userId, productId);
+            await _cartService.AddProductToCartAsync(userId, productId);
 
             return RedirectToPage();
         }
@@ -58,9 +65,10 @@ namespace MyPizza.Web.Pages.Cart
                 return RedirectToPage("/ProductType/Index");
             }
 
-            var userId = _userService.GetUserId(Request.HttpContext.User);
+            _logger.LogInformation($"{Request.HttpContext.User.Identity!.Name ?? "Unautorised user"} deleted product {productId} from cart");
 
-            var cart = await _cartService.DeleteProductFromCartAsync(userId, productId);
+            var userId = _userService.GetUserId(Request.HttpContext.User);
+            await _cartService.DeleteProductFromCartAsync(userId, productId);
 
             return RedirectToPage();
         }

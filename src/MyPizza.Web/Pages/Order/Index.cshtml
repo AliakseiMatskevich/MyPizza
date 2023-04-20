@@ -1,0 +1,71 @@
+﻿@page
+@model MyPizza.Web.Pages.Order.IndexModel
+@{
+    ViewData["Title"] = "My orders";
+}
+
+<div class="container">
+    @foreach (var order in Model.OrderIndexModel.Orders)
+    {
+        <div class="row border border-info rounded-5 mb-2">
+            <div class="row">
+                <div class="text-success fs-5">
+                    Order date: &nbsp; @order.Date
+                </div>            
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row justify-content-center mt-5">
+                        <div class="text-info d-flex align-items-center">
+                            <p>
+                                Address: @order.Street, &nbsp; @order.Street, &nbsp; @order.BuildingNumber
+                            </p>                        
+                        </div>
+                        <div class="text-info d-flex align-items-center">
+                            <p>
+                                Confirmation email: &nbsp; @order.Email
+                            </p>                        
+                        </div>
+                        <div class="text-info d-flex align-items-center">
+                            <p>
+                                Phone number: &nbsp; @order.PhoneNumber
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row justify-content-center">
+                        <div class="col-md-2">
+                            <img class="cart-image" src="~/images/cartimage.webp" alt="cartimage">
+                        </div>
+                        <div class="col-md fw-bold d-flex align-items-center fs-2">
+                            Total amount: &nbsp; &#36; @order.Sum()
+                        </div>
+                    </div>
+                    @foreach (var product in order.Products.Select((value, i) => new { i, value }))
+                    {
+                        <div class="row cart-product d-flex align-items-center fw-light">
+                            <div class="col-md-2">
+                                <img class="cart-image" src="~/@product.value.PictureUrl" alt="image @product.value.Name">
+                            </div>
+                            <div class="col-md-4">
+                                @product.value.Name
+                            </div>
+                            <div class="col-md-2  text-end">
+                                &#36;@product.value.Price
+                            </div>
+                            <div class="col-md-2  text-end">
+                                @product.value.Weight @product.value.Measure
+                            </div>
+                            <div class="col-md-2 text-end">
+                                @product.value.Quantity
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+

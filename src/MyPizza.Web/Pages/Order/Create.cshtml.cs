@@ -15,23 +15,27 @@ namespace MyPizza.Web.Pages.Order
         private readonly ICartViewModelService _cartViewModelService;
         private readonly IOrderViewModelService _orderViewModelService;
         private readonly ICartService _cartService;
+        private readonly ILogger<CreateModel> _logger;
 
         public CreateModel(IUserService userService,
                           ICartViewModelService cartViewModelService,
                           IOrderViewModelService orderViewModelService,
-                          ICartService cartService) 
+                          ICartService cartService,
+                          ILogger<CreateModel> logger) 
         { 
             _userService = userService;
             _cartViewModelService = cartViewModelService;
             _orderViewModelService = orderViewModelService;
             _cartService = cartService;
+            _logger = logger;
         }
 
         [BindProperty]
         public OrderViewModel OrderModel { get; set; } = new OrderViewModel();
 
         public async Task OnGet()
-        {            
+        {
+            _logger.LogInformation($"{Request.HttpContext.User.Identity!.Name ?? "Unautorised user"} visited order create page");
             OrderModel.UserId = _userService.GetUserId(Request.HttpContext.User);
 
             OrderModel = await _orderViewModelService.GetLastUserOrderAsync(OrderModel.UserId);
@@ -45,6 +49,7 @@ namespace MyPizza.Web.Pages.Order
         {                        
             if (ModelState.IsValid)
             {
+                _logger.LogInformation($"{Request.HttpContext.User.Identity!.Name ?? "Unautorised user"} created an order");
                 await _orderViewModelService.CreateOrderAsync(OrderModel);
                 await _cartService.ClearCartAsync(OrderModel.UserId);
                 return RedirectToPage("/Order/OrderConfirmed");
