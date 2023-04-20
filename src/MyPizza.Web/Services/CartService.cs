@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using MyPizza.ApplicationCore.Entities;
 using MyPizza.ApplicationCore.Interfaces;
 using MyPizza.Infrastructure.Data;
@@ -15,27 +16,29 @@ namespace MyPizza.Web.Services
     public sealed class CartService : ICartService
     {
         private readonly IUoWRepository _repository;
+        private readonly ILogger<CartService> _logger;
         
-        public CartService(IUoWRepository repository)
+        public CartService(IUoWRepository repository,
+                            ILogger<CartService> logger)
         {
             _repository = repository;
+            _logger = logger;
         }
 
         private async Task<Cart> GetCartAsync(Guid userId)
         {
+            _logger.LogInformation($"User with id {userId} got cart");
             var cart = await _repository.Carts.FirstOrDefaultAsync(predicate: x => x.UserId.Equals(userId),
                                                                  includes: x => x.Include(p => p.Products));
 
-            if (cart == null)
-            {
-                cart = await CreateCartAsync(userId);
-            }
+            cart ??= await CreateCartAsync(userId);
 
             return cart;
         }
 
         public async Task<Cart> AddProductToCartAsync(Guid userId, Guid productId)
         {
+            _logger.LogInformation($"User with id {userId} added product {productId} to cart");
             var cart = await GetCartAsync(userId);
 
             cart.AddProduct(productId);
@@ -46,6 +49,7 @@ namespace MyPizza.Web.Services
 
         public async Task<Cart> ClearCartAsync(Guid userId)
         {
+            _logger.LogInformation($"User with id {userId} clear cart");
             var cart = await GetCartAsync(userId);
 
             cart.ClearCart();
@@ -56,12 +60,14 @@ namespace MyPizza.Web.Services
 
         public async Task<Cart> CreateCartAsync(Guid userId)
         {
+            _logger.LogInformation($"User with id {userId} create cart");
             var cart = new Cart(userId);
             return await _repository.Carts.CreateAsync(cart);
         }
 
         public async Task<Cart> DeleteProductFromCartAsync(Guid userId, Guid productId)
         {
+            _logger.LogInformation($"User with id {userId} deleted product {productId} from cart");
             var cart = await GetCartAsync(userId);
 
             cart.DeleteProduct(productId);

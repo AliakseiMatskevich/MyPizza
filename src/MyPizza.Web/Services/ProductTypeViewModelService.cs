@@ -14,19 +14,24 @@ namespace MyPizza.Web.Services
         private readonly IMapper _mapper;
         private readonly ICategoryViewModelService _categoryService;
         private readonly IWeightTypeViewModelService _weightTypeService;
+        private readonly ILogger<ProductTypeViewModelService> _logger;
+
         public ProductTypeViewModelService(IUoWRepository repository,
             IMapper mapper,
             ICategoryViewModelService categoryService,
-            IWeightTypeViewModelService weightTypeService) 
+            IWeightTypeViewModelService weightTypeService,
+            ILogger<ProductTypeViewModelService> logger) 
         {
             _repository = repository;
             _mapper = mapper;
             _categoryService = categoryService;
             _weightTypeService = weightTypeService;
+            _logger = logger;
         }
 
         public async Task<ProductTypeIndexViewModel> GetProductTypesAsync(Guid? categoryId, Guid? weightTypeId)
         {
+            _logger.LogInformation($"Product types list with category {categoryId} and weight type {weightTypeId} has been recieved");
             var categories = await _categoryService.GetCategoriesAsync();
             categoryId = categories.SetActiveItem(categoryId);
 
