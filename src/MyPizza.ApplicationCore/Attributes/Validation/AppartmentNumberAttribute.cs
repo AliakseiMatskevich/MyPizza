@@ -6,10 +6,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace MyPizza.ApplicationCore.Attributes
+namespace MyPizza.ApplicationCore.Attributes.Validation
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class AppartmentNumberAttribute : ValidationAttribute
+    public sealed partial class AppartmentNumberAttribute : ValidationAttribute
     {
         public AppartmentNumberAttribute()
         {
@@ -18,12 +18,19 @@ namespace MyPizza.ApplicationCore.Attributes
 
         public override bool IsValid(object? value)
         {
-            Regex regex = new(@"\d+[a-z]*");
+            Regex regex = MyRegex();
             string? appartmentNumber = value as string;
+
+            if (appartmentNumber is null)
+                return false;
+
             var match = regex.Match(appartmentNumber!);
             if (match.Success)
                 return match.Value.Equals(appartmentNumber);
             return false;
         }
+
+        [GeneratedRegex("\\d+[a-z]*")]
+        private static partial Regex MyRegex();
     }
 }

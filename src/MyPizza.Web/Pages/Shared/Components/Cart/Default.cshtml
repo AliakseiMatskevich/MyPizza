@@ -4,9 +4,9 @@
     ViewData["Title"] = "My Basket";
 }
 
-<a class="btn btn-light" asp-page="/Cart/Index">
+<a class="btn btn-info" asp-page="/Cart/Index">
     <i class="bi bi-cart4"></i> 
-    <span>
+    <span class="position-relative top-0 start-0 translate-middle badge rounded-pill bg-danger">
         @Model.ProductsCount
-    </span>
+    </span>    
 </a>

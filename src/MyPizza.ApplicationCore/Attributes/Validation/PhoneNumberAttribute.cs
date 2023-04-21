@@ -6,10 +6,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace MyPizza.ApplicationCore.Attributes
+namespace MyPizza.ApplicationCore.Attributes.Validation
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class PhoneNumberAttribute : ValidationAttribute
+    public sealed partial class PhoneNumberAttribute : ValidationAttribute
     {
         public PhoneNumberAttribute()
         {
@@ -18,12 +18,19 @@ namespace MyPizza.ApplicationCore.Attributes
 
         public override bool IsValid(object? value)
         {
-            Regex regex = new(@"\+\d{3}[\s\-]*\d{2}[\s\-]*\d{3}[\s\-]*\d{2}[\s\-]*\d{2}");
+            Regex regex = MyRegex();
             string? phoneNumber = value as string;
+
+            if (phoneNumber is null)
+                return false;
+
             var match = regex.Match(phoneNumber!);
             if (match.Success)
                 return match.Value.Equals(phoneNumber);
             return false;
         }
+
+        [GeneratedRegex("\\+\\d{3}[\\s\\-]*\\d{2}[\\s\\-]*\\d{3}[\\s\\-]*\\d{2}[\\s\\-]*\\d{2}")]
+        private static partial Regex MyRegex();
     }
 }

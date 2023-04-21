@@ -6,10 +6,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace MyPizza.ApplicationCore.Attributes
+namespace MyPizza.ApplicationCore.Attributes.Validation
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class BuildingNumberAttribute: ValidationAttribute
+    public sealed class BuildingNumberAttribute : ValidationAttribute
     {
         public BuildingNumberAttribute()
         {
@@ -19,6 +19,9 @@ namespace MyPizza.ApplicationCore.Attributes
         {
             Regex regex = new(@"\d+[a-z]*/*\d*");
             string? buildingNumber = value as string;
+            if (buildingNumber is null)
+                return false;
+
             var match = regex.Match(buildingNumber!);
             if (match.Success)
                 return match.Value.Equals(buildingNumber);

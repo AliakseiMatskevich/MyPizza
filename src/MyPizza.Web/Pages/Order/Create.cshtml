@@ -1,0 +1,86 @@
+﻿@page
+@model MyPizza.Web.Pages.Order.CreateModel
+@{
+}
+
+<div class="container">
+    <form asp-page="Order/Create" method="post">
+        <input hidden name="OrderModel.UserId" value="@Model.OrderModel.UserId">
+        <div class="row justify-content-center mb-3">
+            <div class="col-md-12 fw-bold fs-1 text-center">
+                Order details:
+            </div>                           
+        </div>
+        <div class="row">
+            <div class="col-md-5">
+                <div class="mb-3">
+                    <label asp-for="@Model.OrderModel.Email" class="form-label">Email address</label>
+                    <input asp-for="@Model.OrderModel.Email" class="form-control" placeholder="Enter email address">                              
+                    <span asp-validation-for="@Model.OrderModel.Email" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="@Model.OrderModel.Street" class="form-label">Street</label>
+                    <input asp-for="@Model.OrderModel.Street" class="form-control" placeholder="Enter street">
+                    <span asp-validation-for="@Model.OrderModel.Street" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="@Model.OrderModel.BuildingNumber" class="form-label">Building number</label>
+                    <input asp-for="@Model.OrderModel.BuildingNumber" class="form-control" placeholder="Enter building number">
+                    <span asp-validation-for="@Model.OrderModel.BuildingNumber" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="@Model.OrderModel.AppartmentNumber" class="form-label">Appartment number</label>
+                    <input asp-for="@Model.OrderModel.AppartmentNumber" class="form-control" placeholder="Enter appartment number">
+                    <span asp-validation-for="@Model.OrderModel.AppartmentNumber" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="@Model.OrderModel.PhoneNumber" class="form-label">Phone number</label>
+                    <input asp-for="@Model.OrderModel.PhoneNumber" class="form-control" placeholder="Enter phone number">
+                    <span asp-validation-for="@Model.OrderModel.PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <input class="btn btn-warning form-control" type="submit" value="Confirm order">
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-6">
+                <div class="row justify-content-center">
+                    <div class="col-md-2">
+                        <img class="cart-image" src="~/images/cartimage.webp" alt="cartimage">
+                    </div>
+                    <div class="col-md fw-bold d-flex align-items-center fs-2">
+                        Total amount: &nbsp; &#36; @Model.OrderModel.Sum()
+                    </div>
+                </div>
+                @foreach (var product in Model.OrderModel.Products.Select((value, i) => new { i, value }))
+                {                    
+                    <input hidden name="OrderModel.Products[@product.i].ProductId" value="@Model.OrderModel.Products[product.i].ProductId">
+                    <input hidden name="OrderModel.Products[@product.i].PictureUrl" value="@Model.OrderModel.Products[product.i].PictureUrl">
+                    <input hidden name="OrderModel.Products[@product.i].Name" value="@Model.OrderModel.Products[product.i].Name">
+                    <input hidden name="OrderModel.Products[@product.i].Price" value="@Model.OrderModel.Products[product.i].Price">
+                    <input hidden name="OrderModel.Products[@product.i].Weight" value="@Model.OrderModel.Products[product.i].Weight">
+                    <input hidden name="OrderModel.Products[@product.i].Measure" value="@Model.OrderModel.Products[product.i].Measure">
+                    <input hidden name="OrderModel.Products[@product.i].Quantity" value="@Model.OrderModel.Products[product.i].Quantity">
+
+                    <div class="row cart-product d-flex align-items-center fw-light">                        
+                        <div class="col-md-2">
+                            <img class="cart-image" src="~/@product.value.PictureUrl" alt="image @product.value.Name">
+                        </div>
+                        <div class="col-md-4">
+                            @product.value.Name
+                        </div>
+                        <div class="col-md-2  text-end">
+                            &#36;@product.value.Price
+                        </div>
+                        <div class="col-md-2  text-end">
+                            @product.value.Weight @product.value.Measure
+                        </div>
+                        <div class="col-md-2 text-end">
+                            @product.value.Quantity
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>        
+    </form>
+</div>

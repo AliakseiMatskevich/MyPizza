@@ -20,3 +20,20 @@
 .cart-btn-add-delete {
     width:50px;
 }
+
+.order-confirmed-text {
+    font-family: 'Edu NSW ACT Foundation', cursive;
+    color:burlywood;
+}
+
+.navbar-brand {
+    font-family: 'Molle', cursive;
+    font-size: 48px;
+    font-weight: 800;
+    color: #ff6a00 !important;
+}
+.nav-link {
+    font-family: 'Molle', cursive;
+    font-size: 24px;
+    font-weight: 400;
+}

@@ -9,6 +9,7 @@ namespace MyPizza.Web.MappingProfile
         public CartProfiles()
         {
             CreateMap<Cart, CartViewModel>();
+            CreateMap<Cart, OrderViewModel>();
         }        
     }
 }

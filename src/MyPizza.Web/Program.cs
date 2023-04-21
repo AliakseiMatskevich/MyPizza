@@ -6,12 +6,23 @@ using MyPizza.Infrastructure.Data;
 using MyPizza.Infrastructure.Data.Identity;
 using MyPizza.Web.Configuration;
 using MyPizza.Web.Services.EmailSender;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add Context to container
 builder.Services.AddDbContext<PizzaContext>(context =>
         context.UseSqlServer(builder.Configuration.GetConnectionString("PizzaConnection")));
+
+#region Configure Serilog
+var logger = new LoggerConfiguration()
+        .ReadFrom.Configuration(builder.Configuration)
+        .Enrich.FromLogContext()
+        .CreateLogger();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
+#endregion
 
 #region Configure Identity
 builder.Services
@@ -50,7 +61,7 @@ builder.Services.AddTransient<IEmailSender, EmailSender>();
 #endregion
 
 // Add services to the container.
-//builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews();
 
 //AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -102,9 +113,10 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-//app.MapControllerRoute(
-//    name: "default",
-//    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapRazorPages();
 
 app.Logger.LogDebug("Starting the app...");

@@ -20,6 +20,7 @@ namespace MyPizza.Web.Configuration
             services.AddScoped(typeof(ICartQueryService), typeof(CartQueryService));             
             services.AddScoped(typeof(ICartService), typeof(CartService));
             services.AddScoped(typeof(ICartViewModelService), typeof(CartViewModelService));
+            services.AddScoped(typeof(IOrderViewModelService), typeof(OrderViewModelService));
             return services;
         }
     }

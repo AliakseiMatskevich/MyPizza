@@ -1,4 +1,4 @@
-﻿using MyPizza.ApplicationCore.Attributes;
+﻿using MyPizza.ApplicationCore.Attributes.Validation;
 using MyPizza.ApplicationCore.Entities.Abstracts;
 using System;
 using System.Collections.Generic;
@@ -24,6 +24,6 @@ namespace MyPizza.ApplicationCore.Entities
         public string? PhoneNumber { get; set; }
         public decimal Sum { get; set; }
         public DateTime Date { get; set; }
-        public IList<OrderProduct> OrderFood { get; set; } = new List<OrderProduct>();
+        public IList<OrderProduct> Products { get; set; } = new List<OrderProduct>();
     }
 }
