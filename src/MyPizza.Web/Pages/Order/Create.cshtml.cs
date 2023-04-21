@@ -51,6 +51,7 @@ namespace MyPizza.Web.Pages.Order
             {
                 _logger.LogInformation($"{Request.HttpContext.User.Identity!.Name ?? "Unautorised user"} created an order");
                 await _orderViewModelService.CreateOrderAsync(OrderModel);
+                await _orderViewModelService.SendOrderConfirmationEmailAsync(OrderModel);
                 await _cartService.ClearCartAsync(OrderModel.UserId);
                 return RedirectToPage("/Order/OrderConfirmed");
             }
