@@ -1,4 +1,4 @@
-﻿using MyPizza.ApplicationCore.Attributes;
+﻿using MyPizza.ApplicationCore.Attributes.Validation;
 using MyPizza.ApplicationCore.Entities.Abstracts;
 using System;
 using System.Collections.Generic;
