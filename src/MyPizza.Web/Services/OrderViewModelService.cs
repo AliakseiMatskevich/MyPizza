@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 using MimeKit;
 using MyPizza.ApplicationCore.Entities;
 using MyPizza.ApplicationCore.Interfaces;
 using MyPizza.Infrastructure.Interfaces;
 using MyPizza.Web.Interfaces;
 using MyPizza.Web.Models;
+using System.Collections.Generic;
+using System.Text;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace MyPizza.Web.Services
@@ -19,19 +22,22 @@ namespace MyPizza.Web.Services
         private readonly IEmailSender _emailSender;
         [Obsolete]
         private IHostingEnvironment _env;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         [Obsolete]
         public OrderViewModelService(IUoWRepository repository,
                                     IMapper mapper,
                                     ILogger<OrderViewModelService> logger,
                                     IEmailSender emailSender,
-                                    IHostingEnvironment env)
+                                    IHostingEnvironment env,
+                                    IHttpContextAccessor httpContextAccessor)
         {
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
             _emailSender = emailSender;
             _env = env;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<OrderViewModel> GetLastUserOrderAsync(Guid userId)
         {
@@ -84,7 +90,7 @@ namespace MyPizza.Web.Services
                             + Path.DirectorySeparatorChar.ToString()
                             + "EmailTemplate"
                             + Path.DirectorySeparatorChar.ToString()
-                            + "Order.html";
+                            + "OrderTest.html";
 
             var builder = new BodyBuilder();
 
@@ -92,11 +98,42 @@ namespace MyPizza.Web.Services
             {
                 builder.HtmlBody = SourceReader.ReadToEnd();
             }
-
+            string productsHtml = BuildHtmlStringForProductList(model.Products);
             string messageBody = string.Format(builder.HtmlBody,
-                        model.Email);
+                        model.Email,
+                        model.Sum(),
+                        model.Date,
+                        productsHtml);
 
             await _emailSender.SendEmailAsync(model.Email!, "Order confirmation", messageBody);
+        }
+
+        private string BuildHtmlStringForProductList(List<OrderProductViewModel> products)
+        {
+            StringBuilder htmlBuilder = new StringBuilder();
+            foreach (var product in products)
+            {
+                htmlBuilder.Append("<tr>");
+                    htmlBuilder.Append("<td align=\" left\" valign=\"middle\" width=\"20%\">");
+                        htmlBuilder.Append($"<img src=\"{_httpContextAccessor.HttpContext!.Request.Scheme}" +
+                                           $"://{_httpContextAccessor.HttpContext!.Request.Host}/" +
+                                           $"{product.PictureUrl}\" alt=\"img\" width=\"50%\">");
+                    htmlBuilder.Append("</td>");
+                    htmlBuilder.Append("<td align=\" left\" valign=\"middle\" width=\"20%\">");
+                        htmlBuilder.Append(product.Name);
+                    htmlBuilder.Append("</td>");
+                    htmlBuilder.Append("<td align=\" left\" valign=\"middle\" width=\"20%\">");
+                        htmlBuilder.Append("&#36;" + product.Price);
+                    htmlBuilder.Append("</td>");
+                    htmlBuilder.Append("<td align=\" left\" valign=\"middle\" width=\"20%\">");
+                        htmlBuilder.Append($"{product.Weight}&nbsp;{product.Measure}");
+                    htmlBuilder.Append("</td>");
+                    htmlBuilder.Append("<td align=\" left\" valign=\"middle\" width=\"20%\">");
+                        htmlBuilder.Append(product.Quantity);
+                    htmlBuilder.Append("</td>");
+                htmlBuilder.Append("</tr>");
+            }
+            return htmlBuilder.ToString();
         }
     }
 }
