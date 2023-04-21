@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using MimeKit;
 using MyPizza.ApplicationCore.Entities;
 using MyPizza.ApplicationCore.Interfaces;
 using MyPizza.Infrastructure.Interfaces;
 using MyPizza.Web.Interfaces;
 using MyPizza.Web.Models;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace MyPizza.Web.Services
 {
@@ -13,13 +16,22 @@ namespace MyPizza.Web.Services
         private readonly IUoWRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger<OrderViewModelService> _logger;
+        private readonly IEmailSender _emailSender;
+        [Obsolete]
+        private IHostingEnvironment _env;
+
+        [Obsolete]
         public OrderViewModelService(IUoWRepository repository,
                                     IMapper mapper,
-                                    ILogger<OrderViewModelService> logger)
+                                    ILogger<OrderViewModelService> logger,
+                                    IEmailSender emailSender,
+                                    IHostingEnvironment env)
         {
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
+            _emailSender = emailSender;
+            _env = env;
         }
         public async Task<OrderViewModel> GetLastUserOrderAsync(Guid userId)
         {
@@ -62,6 +74,29 @@ namespace MyPizza.Web.Services
 
             var orderModels = _mapper.Map<List<OrderViewModel>>(orders);
             return orderModels;
+        }
+
+        public async Task SendOrderConfirmationEmailAsync(OrderViewModel model)
+        {
+             var pathToFile = _env.WebRootPath
+                            + Path.DirectorySeparatorChar.ToString()
+                            + "Templates"
+                            + Path.DirectorySeparatorChar.ToString()
+                            + "EmailTemplate"
+                            + Path.DirectorySeparatorChar.ToString()
+                            + "Order.html";
+
+            var builder = new BodyBuilder();
+
+            using (StreamReader SourceReader = File.OpenText(pathToFile))
+            {
+                builder.HtmlBody = SourceReader.ReadToEnd();
+            }
+
+            string messageBody = string.Format(builder.HtmlBody,
+                        model.Email);
+
+            await _emailSender.SendEmailAsync(model.Email!, "Order confirmation", messageBody);
         }
     }
 }

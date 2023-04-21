@@ -36,7 +36,7 @@ namespace MyPizza.Web.Services.EmailSender
             smtpServer.Connect(_host, _port, SecureSocketOptions.StartTls);
             await smtpServer.AuthenticateAsync(_emailFrom, _password);
             await smtpServer.SendAsync(email);
-            smtpServer.Disconnect(true);
+            await smtpServer.DisconnectAsync(true);
             _logger.LogInformation($"Email to {toEmail} send successfully!");           
         }        
     }
