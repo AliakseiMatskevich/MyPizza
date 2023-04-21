@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyPizza.ApplicationCore.Attributes;
+using MyPizza.ApplicationCore.Attributes.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace MyPizza.Web.Models

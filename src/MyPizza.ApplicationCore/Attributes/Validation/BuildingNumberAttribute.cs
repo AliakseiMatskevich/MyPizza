@@ -6,10 +6,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace MyPizza.ApplicationCore.Attributes
+namespace MyPizza.ApplicationCore.Attributes.Validation
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class BuildingNumberAttribute: ValidationAttribute
+    public sealed class BuildingNumberAttribute : ValidationAttribute
     {
         public BuildingNumberAttribute()
         {
