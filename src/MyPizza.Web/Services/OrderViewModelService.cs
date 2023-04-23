@@ -90,7 +90,7 @@ namespace MyPizza.Web.Services
                             + Path.DirectorySeparatorChar.ToString()
                             + "EmailTemplate"
                             + Path.DirectorySeparatorChar.ToString()
-                            + "OrderTest.html";
+                            + "Order.html";
 
             var builder = new BodyBuilder();
 
