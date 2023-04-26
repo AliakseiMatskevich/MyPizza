@@ -24,6 +24,7 @@ namespace MyPizza.ApplicationCore.Entities
         public string? PhoneNumber { get; set; }
         public decimal Sum { get; set; }
         public DateTime Date { get; set; }
+        public bool Paid { get; set; }
         public IList<OrderProduct> Products { get; set; } = new List<OrderProduct>();
     }
 }

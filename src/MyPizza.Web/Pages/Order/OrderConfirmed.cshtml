@@ -5,22 +5,23 @@
 
 <div class="container">
     <div class="row justify-content-center mb-3">
-        <div class="col-md-12 fw-bold fs-1 text-center order-confirmed-text">
-            Thank you for your order!!!
+        <div class="col-md-12 fw-bold fs-1 text-center">
+            $@Model.OrderModel.Sum order completed successfully!!!
         </div>
     </div>
     <div class="row justify-content-center mb-3">
-        <div class="col-md-12 fw-bold fs-1 text-center order-confirmed-text">
-            We have sent you an order confirmation to your email.
+        <div class="col-md-12 fw-bold fs-3 text-center">
+            We have sent you an order details to your email.
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <img src="~/images/thankyou.jpg" width="100%">
+    <div class="row justify-content-center mb-3">
+        <div class="col-md-12 text-center">
+            <form asp-page-handler="CheckOut" method="post">
+                <input hidden name="sum" value="@Model.OrderModel.Sum" />
+                <input hidden name="orderId" value="@Model.OrderModel.OrderId" />
+                <button class="btn btn-warning w-50" type="submit">Pay for</button>
+            </form>
         </div>
     </div>
 </div>
 
-@section Scripts {
-    <script src="~/js/OrderConfirmed.js"></script>
-}
