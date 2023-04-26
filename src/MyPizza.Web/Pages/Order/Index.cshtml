@@ -41,6 +41,20 @@
                         <div class="col-md fw-bold d-flex align-items-center fs-2">
                             Total amount: &nbsp; &#36; @order.Sum()
                         </div>
+                        <div class="col-md align-items-center">
+                            @if (!order.Paid)
+                            {
+                                <form asp-page="/Order/OrderConfirmed" asp-page-handler="CheckOut" method="post">
+                                    <input hidden name="sum" value="@order.Sum()" />
+                                    <input hidden name="orderId" value="@order.Id" />
+                                    <button class="btn btn-warning w-50" type="submit">Pay for</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <div class="col-md text-success fs-3">Paid</div>
+                            }
+                        </div>
                     </div>
                     @foreach (var product in order.Products.Select((value, i) => new { i, value }))
                     {

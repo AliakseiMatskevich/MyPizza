@@ -6,7 +6,8 @@ namespace MyPizza.Web.Interfaces
     {
         Task<IList<OrderViewModel>> GetUserOrdersAsync(Guid userId);
         Task<OrderViewModel> GetLastUserOrderAsync(Guid userId);
-        Task<OrderViewModel> CreateOrderAsync(OrderViewModel model);
+        Task<Guid> CreateOrderAsync(OrderViewModel model);
         Task SendOrderConfirmationEmailAsync(OrderViewModel model);
+        Task SetOrderAsPaidAsync(Guid orderId);
     }
 }

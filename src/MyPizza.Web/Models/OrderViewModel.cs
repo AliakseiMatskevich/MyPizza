@@ -6,6 +6,7 @@ namespace MyPizza.Web.Models
 {
     public sealed class OrderViewModel
     {
+        public Guid Id { get; set; }
         public Guid UserId { get; set; }
         [EmailAddress, Required(ErrorMessage = "Email is required")]
         public string? Email { get; set; }
@@ -18,6 +19,7 @@ namespace MyPizza.Web.Models
         [PhoneNumber, Required(ErrorMessage = "Phone number is required")]
         public string? PhoneNumber { get; set; }
         public DateTime Date { get; set; }
+        public bool Paid { get; set; }
         public List<OrderProductViewModel> Products { get; set; } = new List<OrderProductViewModel>();
 
         public OrderViewModel()

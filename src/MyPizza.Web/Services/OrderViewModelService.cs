@@ -20,16 +20,14 @@ namespace MyPizza.Web.Services
         private readonly IMapper _mapper;
         private readonly ILogger<OrderViewModelService> _logger;
         private readonly IEmailSender _emailSender;
-        [Obsolete]
-        private IHostingEnvironment _env;
+        private IWebHostEnvironment _env;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        [Obsolete]
         public OrderViewModelService(IUoWRepository repository,
                                     IMapper mapper,
                                     ILogger<OrderViewModelService> logger,
                                     IEmailSender emailSender,
-                                    IHostingEnvironment env,
+                                    IWebHostEnvironment env,
                                     IHttpContextAccessor httpContextAccessor)
         {
             _repository = repository;
@@ -39,6 +37,7 @@ namespace MyPizza.Web.Services
             _env = env;
             _httpContextAccessor = httpContextAccessor;
         }
+
         public async Task<OrderViewModel> GetLastUserOrderAsync(Guid userId)
         {
             _logger.LogInformation($"User with id {userId} got his last order");
@@ -54,13 +53,13 @@ namespace MyPizza.Web.Services
             return orderModel;
         }
 
-        public async Task<OrderViewModel> CreateOrderAsync(OrderViewModel model)
+        public async Task<Guid> CreateOrderAsync(OrderViewModel model)
         {
             _logger.LogInformation($"User with id {model.UserId} created an order");
             var newOrder = _mapper.Map<Order>(model);
             newOrder = await _repository.Orders.CreateAsync(newOrder);
             var newModel = _mapper.Map<OrderViewModel>(newOrder);
-            return newModel;
+            return newModel.Id;
         }
 
         public async Task<IList<OrderViewModel>> GetUserOrdersAsync(Guid userId)
@@ -114,26 +113,36 @@ namespace MyPizza.Web.Services
             foreach (var product in products)
             {
                 htmlBuilder.Append("<tr>");
-                    htmlBuilder.Append("<td align=\" left\" valign=\"middle\" width=\"20%\">");
+                    htmlBuilder.Append("<td align=\" center\" valign=\"middle\" width=\"20%\">");
                         htmlBuilder.Append($"<img src=\"{_httpContextAccessor.HttpContext!.Request.Scheme}" +
                                            $"://{_httpContextAccessor.HttpContext!.Request.Host}/" +
                                            $"{product.PictureUrl}\" alt=\"img\" width=\"50%\">");
                     htmlBuilder.Append("</td>");
-                    htmlBuilder.Append("<td align=\" left\" valign=\"middle\" width=\"20%\">");
+                    htmlBuilder.Append("<td align=\" center\" valign=\"middle\" width=\"20%\">");
                         htmlBuilder.Append(product.Name);
                     htmlBuilder.Append("</td>");
-                    htmlBuilder.Append("<td align=\" left\" valign=\"middle\" width=\"20%\">");
+                    htmlBuilder.Append("<td align=\" center\" valign=\"middle\" width=\"20%\">");
                         htmlBuilder.Append("&#36;" + product.Price);
                     htmlBuilder.Append("</td>");
-                    htmlBuilder.Append("<td align=\" left\" valign=\"middle\" width=\"20%\">");
+                    htmlBuilder.Append("<td align=\" center\" valign=\"middle\" width=\"20%\">");
                         htmlBuilder.Append($"{product.Weight}&nbsp;{product.Measure}");
                     htmlBuilder.Append("</td>");
-                    htmlBuilder.Append("<td align=\" left\" valign=\"middle\" width=\"20%\">");
+                    htmlBuilder.Append("<td align=\" center\" valign=\"middle\" width=\"20%\">");
                         htmlBuilder.Append(product.Quantity);
                     htmlBuilder.Append("</td>");
                 htmlBuilder.Append("</tr>");
             }
             return htmlBuilder.ToString();
+        }
+
+        public async Task SetOrderAsPaidAsync(Guid orderId)
+        {
+            var order = await _repository.Orders.FirstOrDefaultAsync(x => x.Id == orderId);
+            if (order is not null)
+            {
+                order.Paid = true;
+                await _repository.Orders.UpdateAsync(order);
+            }           
         }
     }
 }

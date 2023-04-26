@@ -1,7 +1,7 @@
-﻿function redirecttologinpage() {
+﻿function redirecttomainpage() {
     window.location = "/ProductType/Index";
 }
 
 $(document).ready(function () {
-    setInterval(redirecttologinpage, 5000);
+    setInterval(redirecttomainpage, 5000);
 });
