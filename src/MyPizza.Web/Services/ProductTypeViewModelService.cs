@@ -46,7 +46,7 @@ namespace MyPizza.Web.Services
             
             var vm = new ProductTypeIndexViewModel()
             {
-                ProductTypeItems = _mapper.Map<List<ProductViewModel>>(entities),
+                ProductTypeItems = _mapper.Map<List<ProductViewModel>>(entities).Chunk(size:4),
                 Categories = categories,
                 WeightTypes = weightTypes
             };

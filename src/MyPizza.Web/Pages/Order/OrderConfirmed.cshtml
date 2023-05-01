@@ -1,6 +1,7 @@
 ﻿@page
 @model MyPizza.Web.Pages.Order.OrderConfirmedModel
 @{
+    ViewData["Title"] = "Order completed";
 }
 
 <div class="container">
@@ -19,7 +20,7 @@
             <form asp-page-handler="CheckOut" method="post">
                 <input hidden name="sum" value="@Model.OrderModel.Sum" />
                 <input hidden name="orderId" value="@Model.OrderModel.OrderId" />
-                <button class="btn btn-warning w-50" type="submit">Pay for</button>
+                <button class="btn btn-warning w-50" type="submit">Chekout</button>
             </form>
         </div>
     </div>

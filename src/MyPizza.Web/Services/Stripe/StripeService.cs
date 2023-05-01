@@ -18,7 +18,7 @@ namespace MyPizza.Web.Services.Stripe
         public async Task<Session> PaymentCreateAsync(decimal amount, Guid orderId)
         {
             var options = new SessionCreateOptions
-            {
+            {                
                 PaymentMethodTypes = new List<string> 
                 {
                     "card"
@@ -30,10 +30,11 @@ namespace MyPizza.Web.Services.Stripe
                         PriceData = new SessionLineItemPriceDataOptions
                         {
                             UnitAmount = Convert.ToInt32(amount * 100), // Price is in USD cents.
-                            Currency = "USD",
+                            Currency = "USD",                            
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {
                                 Name = "Total order sum:",
+                                Description = $"Order number: {orderId}"
                             },
                         },
                         Quantity = 1,
