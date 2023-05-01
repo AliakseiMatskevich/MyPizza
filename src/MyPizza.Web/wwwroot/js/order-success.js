@@ -1,5 +1,5 @@
 ﻿function redirecttomainpage() {
-    window.location = "/ProductType/Index";
+    window.location = "/Order/Index";
 }
 
 $(document).ready(function () {
