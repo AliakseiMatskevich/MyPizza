@@ -24,7 +24,7 @@ namespace MyPizza.Web.Models
 
         public OrderViewModel()
         {
-            Date = DateTime.Now;
+            Date = DateTime.UtcNow;
         }
         public decimal Sum()
         {

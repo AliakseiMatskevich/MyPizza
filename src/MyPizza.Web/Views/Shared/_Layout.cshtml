@@ -1,9 +1,14 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var date = DateTime.Now;
+}
+
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MyPizza.Web</title>
+    <title>MyPizza - @ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MyPizza.Web.styles.css" asp-append-version="true" />
@@ -14,21 +19,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Foundation&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Molle&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
+    <link rel="shortcut icon" href="~/images/pizza.ico" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" defer></script>    
 </head>
-<body>
+
+<body onload="setTimezoneCookie();">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-info border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-page="/ProductType/Index">PizzaPizza</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-white fs-3" asp-page="/Order/Index">My Orders</a>
-                        </li>                       
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav flex-grow-1 text-white fw-bold">
+                        <li class="nav-link time-hours">@date.Hour.ToString("D2")</li>
+                        <li class="nav-link">:</li>
+                        <li class="nav-link time-minutes">@date.Minute.ToString("D2")</li>
+                        <li class="nav-link">:</li>
+                        <li class="nav-link time-seconds">@date.Second.ToString("D2")</li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -41,7 +56,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted mt-5">
         <div class="container">
             &copy; 2023 - MyPizza.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
@@ -49,6 +64,10 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/producttype.js" asp-append-version="true"></script>
+    <script src="~/js/tooltip.js" asp-append-version="true"></script>
+    <script src="~/js/time.js" defer></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>

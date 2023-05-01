@@ -6,6 +6,7 @@ using MimeKit;
 using MyPizza.ApplicationCore.Entities;
 using MyPizza.ApplicationCore.Interfaces;
 using MyPizza.Infrastructure.Interfaces;
+using MyPizza.Web.Extentions;
 using MyPizza.Web.Interfaces;
 using MyPizza.Web.Models;
 using System.Collections.Generic;
@@ -22,13 +23,16 @@ namespace MyPizza.Web.Services
         private readonly IEmailSender _emailSender;
         private IWebHostEnvironment _env;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ITimeService _timeService;
+        private readonly int _timezoneOffset;
 
         public OrderViewModelService(IUoWRepository repository,
                                     IMapper mapper,
                                     ILogger<OrderViewModelService> logger,
                                     IEmailSender emailSender,
                                     IWebHostEnvironment env,
-                                    IHttpContextAccessor httpContextAccessor)
+                                    IHttpContextAccessor httpContextAccessor,
+                                    ITimeService timeService)
         {
             _repository = repository;
             _mapper = mapper;
@@ -36,6 +40,8 @@ namespace MyPizza.Web.Services
             _emailSender = emailSender;
             _env = env;
             _httpContextAccessor = httpContextAccessor;
+            _timeService = timeService;
+            _timezoneOffset = timeService.GetTimezoneOffset();
         }
 
         public async Task<OrderViewModel> GetLastUserOrderAsync(Guid userId)
@@ -64,6 +70,7 @@ namespace MyPizza.Web.Services
 
         public async Task<IList<OrderViewModel>> GetUserOrdersAsync(Guid userId)
         {
+            var ts = _timeService.GetTimezoneOffset();
             _logger.LogInformation($"User with id {userId} got orders list");
             var orders = await _repository.Orders.GetListAsync(
                 predicate: x => x.UserId == userId,
@@ -76,14 +83,15 @@ namespace MyPizza.Web.Services
             {
                 return new List<OrderViewModel>();
             }
-
-            var orderModels = _mapper.Map<List<OrderViewModel>>(orders);
+           
+            var orderModels = _mapper.Map<List<OrderViewModel>>(orders).SetTimezoneOffset(_timezoneOffset); 
             return orderModels;
         }
 
         public async Task SendOrderConfirmationEmailAsync(OrderViewModel model)
         {
-             var pathToFile = _env.WebRootPath
+            model.SetTimezoneOffset(_timezoneOffset);
+            var pathToFile = _env.WebRootPath
                             + Path.DirectorySeparatorChar.ToString()
                             + "Templates"
                             + Path.DirectorySeparatorChar.ToString()
@@ -108,7 +116,7 @@ namespace MyPizza.Web.Services
         }
 
         private string BuildHtmlStringForProductList(List<OrderProductViewModel> products)
-        {
+        {            
             StringBuilder htmlBuilder = new StringBuilder();
             foreach (var product in products)
             {
