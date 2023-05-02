@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using MyPizza.ApplicationCore.Attributes.Filter;
 using MyPizza.ApplicationCore.Interfaces;
 using MyPizza.Infrastructure.Interfaces;
 using MyPizza.Web.Interfaces;
@@ -8,6 +9,7 @@ using MyPizza.Web.Models;
 
 namespace MyPizza.Web.Pages.Cart
 {
+    [TypeFilter(typeof(AppExceptionFilter))]
     [Authorize]
     public class IndexModel : PageModel
     {

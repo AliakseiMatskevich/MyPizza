@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using MyPizza.ApplicationCore.Attributes.Filter;
 using MyPizza.ApplicationCore.Interfaces;
 using MyPizza.Web.Interfaces;
 using MyPizza.Web.Models;
 
 namespace MyPizza.Web.Pages.Order
 {
+    [TypeFilter(typeof(AppExceptionFilter))]
     [Authorize]
     public class IndexModel : PageModel
     {
@@ -27,7 +29,7 @@ namespace MyPizza.Web.Pages.Order
 
         public async Task OnGet()
         {
-            _logger.LogInformation($"{Request.HttpContext.User.Identity!.Name ?? "Unautorised user"} visited order index page");
+            _logger.LogInformation($"{Request.HttpContext.User.Identity!.Name ?? "Unautorised user"} visit order index page");
 
             var userId = _userService.GetUserId(Request.HttpContext.User);
 

@@ -27,7 +27,7 @@ namespace MyPizza.Web.Services
 
         private async Task<Cart> GetCartAsync(Guid userId)
         {
-            _logger.LogInformation($"User with id {userId} got cart");
+            _logger.LogInformation($"User with id {userId} get cart");
             var cart = await _repository.Carts.FirstOrDefaultAsync(predicate: x => x.UserId.Equals(userId),
                                                                  includes: x => x.Include(p => p.Products));
 
@@ -38,7 +38,7 @@ namespace MyPizza.Web.Services
 
         public async Task<Cart> AddProductToCartAsync(Guid userId, Guid productId)
         {
-            _logger.LogInformation($"User with id {userId} added product {productId} to cart");
+            _logger.LogInformation($"User with id {userId} add product {productId} to cart");
             var cart = await GetCartAsync(userId);
 
             cart.AddProduct(productId);
@@ -67,7 +67,7 @@ namespace MyPizza.Web.Services
 
         public async Task<Cart> DeleteProductFromCartAsync(Guid userId, Guid productId)
         {
-            _logger.LogInformation($"User with id {userId} deleted product {productId} from cart");
+            _logger.LogInformation($"User with id {userId} delete product {productId} from cart");
             var cart = await GetCartAsync(userId);
 
             cart.DeleteProduct(productId);

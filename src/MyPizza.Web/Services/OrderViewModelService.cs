@@ -23,7 +23,6 @@ namespace MyPizza.Web.Services
         private readonly IEmailSender _emailSender;
         private IWebHostEnvironment _env;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ITimeService _timeService;
         private readonly int _timezoneOffset;
 
         public OrderViewModelService(IUoWRepository repository,
@@ -40,13 +39,12 @@ namespace MyPizza.Web.Services
             _emailSender = emailSender;
             _env = env;
             _httpContextAccessor = httpContextAccessor;
-            _timeService = timeService;
             _timezoneOffset = timeService.GetTimezoneOffset();
         }
 
         public async Task<OrderViewModel> GetLastUserOrderAsync(Guid userId)
         {
-            _logger.LogInformation($"User with id {userId} got his last order");
+            _logger.LogInformation($"User with id {userId} get his last order");
             var order = await _repository.Orders.FirstOrDefaultAsync(
                 predicate: x => x.UserId == userId,
                 orderBy: x => x.OrderByDescending(x => x.Date));
@@ -61,7 +59,7 @@ namespace MyPizza.Web.Services
 
         public async Task<Guid> CreateOrderAsync(OrderViewModel model)
         {
-            _logger.LogInformation($"User with id {model.UserId} created an order");
+            _logger.LogInformation($"User with id {model.UserId} create an order");
             var newOrder = _mapper.Map<Order>(model);
             newOrder = await _repository.Orders.CreateAsync(newOrder);
             var newModel = _mapper.Map<OrderViewModel>(newOrder);
@@ -69,9 +67,8 @@ namespace MyPizza.Web.Services
         }
 
         public async Task<IList<OrderViewModel>> GetUserOrdersAsync(Guid userId)
-        {
-            var ts = _timeService.GetTimezoneOffset();
-            _logger.LogInformation($"User with id {userId} got orders list");
+        {           
+            _logger.LogInformation($"User with id {userId} get orders list");
             var orders = await _repository.Orders.GetListAsync(
                 predicate: x => x.UserId == userId,
                 orderBy: x => x.OrderByDescending(x => x.Date),
@@ -110,7 +107,8 @@ namespace MyPizza.Web.Services
                         model.Email,
                         model.Sum(),
                         model.Date,
-                        productsHtml);
+                        productsHtml,
+                        BuildMyOrderUrl());
 
             await _emailSender.SendEmailAsync(model.Email!, "Order confirmation", messageBody);
         }
@@ -141,6 +139,14 @@ namespace MyPizza.Web.Services
                 htmlBuilder.Append("</tr>");
             }
             return htmlBuilder.ToString();
+        }
+
+        private string BuildMyOrderUrl()
+        {
+            var url = $"{_httpContextAccessor.HttpContext!.Request.Scheme}" +
+                      $"://{_httpContextAccessor.HttpContext!.Request.Host}/" +
+                      $"Order";
+            return url;
         }
 
         public async Task SetOrderAsPaidAsync(Guid orderId)
