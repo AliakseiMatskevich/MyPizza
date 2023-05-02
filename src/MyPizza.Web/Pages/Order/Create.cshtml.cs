@@ -1,7 +1,9 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using MyPizza.ApplicationCore.Attributes.Filter;
 using MyPizza.ApplicationCore.Interfaces;
 using MyPizza.Infrastructure.Interfaces;
 using MyPizza.Web.Interfaces;
@@ -9,6 +11,8 @@ using MyPizza.Web.Models;
 
 namespace MyPizza.Web.Pages.Order
 {
+    [TypeFilter(typeof(AppExceptionFilter))]
+    [Authorize]
     public class CreateModel : PageModel
     {
         private readonly IUserService _userService;
@@ -34,8 +38,8 @@ namespace MyPizza.Web.Pages.Order
         public OrderViewModel OrderModel { get; set; } = new OrderViewModel();
 
         public async Task OnGet()
-        {
-            _logger.LogInformation($"{Request.HttpContext.User.Identity!.Name ?? "Unautorised user"} visited order create page");
+        {            
+            _logger.LogInformation($"{Request.HttpContext.User.Identity!.Name ?? "Unautorised user"} visit order create page");
             OrderModel.UserId = _userService.GetUserId(Request.HttpContext.User);
 
             OrderModel = await _orderViewModelService.GetLastUserOrderAsync(OrderModel.UserId);
@@ -49,7 +53,7 @@ namespace MyPizza.Web.Pages.Order
         {                        
             if (ModelState.IsValid)
             {                
-                _logger.LogInformation($"{Request.HttpContext.User.Identity!.Name ?? "Unautorised user"} created an order");
+                _logger.LogInformation($"{Request.HttpContext.User.Identity!.Name ?? "Unautorised user"} creat an order");
                 var orderId = await _orderViewModelService.CreateOrderAsync(OrderModel);
                 await _orderViewModelService.SendOrderConfirmationEmailAsync(OrderModel);
                 await _cartService.ClearCartAsync(OrderModel.UserId);

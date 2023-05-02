@@ -1,5 +1,8 @@
-﻿@{
-    var date = DateTime.Now;
+﻿@using MyPizza.ApplicationCore.Interfaces;
+@inject ITimeService TimeService;
+@{    
+    var _timezoneOffset = TimeService.GetTimezoneOffset();
+    var _date = DateTime.UtcNow.AddMinutes(-_timezoneOffset);
 }
 
 <!DOCTYPE html>
@@ -24,7 +27,7 @@
 </head>
 
 <body onload="setTimezoneCookie();">
-    <header>
+    <header class="container">
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-page="/ProductType/Index">PizzaPizza</a>
@@ -39,11 +42,11 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav flex-grow-1 text-white fw-bold">
-                        <li class="nav-link time-hours">@date.Hour.ToString("D2")</li>
+                        <li class="nav-link time-hours">@_date.Hour.ToString("D2")</li>
                         <li class="nav-link">:</li>
-                        <li class="nav-link time-minutes">@date.Minute.ToString("D2")</li>
+                        <li class="nav-link time-minutes">@_date.Minute.ToString("D2")</li>
                         <li class="nav-link">:</li>
-                        <li class="nav-link time-seconds">@date.Second.ToString("D2")</li>
+                        <li class="nav-link time-seconds">@_date.Second.ToString("D2")</li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -58,7 +61,7 @@
 
     <footer class="border-top footer text-muted mt-5">
         <div class="container">
-            &copy; 2023 - MyPizza.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; @_date.Year - MyPizza.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

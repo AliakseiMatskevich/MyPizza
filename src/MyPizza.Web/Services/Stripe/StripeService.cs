@@ -9,14 +9,16 @@ namespace MyPizza.Web.Services.Stripe
     public class StripeService : IStripeService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        
-        public StripeService(IHttpContextAccessor httpContextAccessor)
+        private readonly ILogger<StripeService> _logger;
+        public StripeService(IHttpContextAccessor httpContextAccessor, ILogger<StripeService> logger)
         {
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
 
         public async Task<Session> PaymentCreateAsync(decimal amount, Guid orderId)
         {
+            _logger.LogInformation($"Order {orderId} pay successfully!");
             var options = new SessionCreateOptions
             {                
                 PaymentMethodTypes = new List<string> 
@@ -44,7 +46,7 @@ namespace MyPizza.Web.Services.Stripe
                 SuccessUrl = $"{_httpContextAccessor.HttpContext!.Request.Scheme}" +
                              $"://{_httpContextAccessor.HttpContext.Request.Host}/Order/OrderSuccess?orderId={orderId}", 
                 CancelUrl = $"{_httpContextAccessor.HttpContext!.Request.Scheme}" +
-                            $"://{_httpContextAccessor.HttpContext.Request.Host}/Order/OrderFailed",  
+                            $"://{_httpContextAccessor.HttpContext.Request.Host}/Order/OrderFailed?orderId={orderId}",  
                 Locale = "en"
             };
 

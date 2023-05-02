@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MyPizza.ApplicationCore.Attributes.Filter;
@@ -25,9 +26,8 @@ namespace MyPizza.Web.Pages.ProducType
         }
 
         public async Task OnGet(Guid? categoryId = null, Guid? weightTypeId = null)
-        {
-            //throw new NotImplementedException();
-            _logger.LogInformation($"{Request.HttpContext.User.Identity!.Name ?? "Unautorised user"} visited product type page");
+        {            
+            _logger.LogInformation($"{Request.HttpContext.User.Identity!.Name ?? "Unautorised user"} visit product type page");
             ProductTypeModel = await _productTypeService.GetProductTypesAsync(categoryId, weightTypeId);
         }
     }
