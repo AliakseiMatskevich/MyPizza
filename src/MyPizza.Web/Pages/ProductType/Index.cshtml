@@ -1,41 +1,14 @@
 ﻿@page
 @model MyPizza.Web.Pages.ProducType.IndexModel
+@{
+    ViewData["Title"] = "Products";
+}
 
-<div class="row mb-2">
-    <div class="col-md">
-        <div id="carouselExampleControls" class="carousel slide carousel-fade" data-bs-ride="carousel">
-            <div class="carousel-inner pe-2">
-                <div class="carousel-item active" data-bs-interval="7000">
-                    <img src="~/images/banner00.jpg" class="d-block w-100" alt="...">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h2>Already ready!</h2>
-                        <h4>All the taste, not on your waist!</h4>
-                    </div>
-                </div>
-                <div class="carousel-item" data-bs-interval="7000">
-                    <img src="~/images/banner01.jpg" class="d-block w-100" alt="...">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h2>Hyrry up!</h2>
-                        <h3>Better Ingredients. Better Pizza.</h3>
-                    </div>
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
-    </div>
-</div>
 
 <div class="container">    
-    <div class="row mb-5">
+    <div class="row mb-2 mb-5">
         <div class="col-md-2">
-            <div class="badge rounded-pill bg-warning w-100 text-center mb-3 fs-4">Categories</div>
+            <div class="badge bg-info w-100 text-center mb-3 fs-4">Categories</div>
             <ul class="nav nav-pills flex-column mb-5 fs-6 fw-normal">
                 @foreach (var item in Model.ProductTypeModel.Categories!)
                 {
@@ -43,12 +16,12 @@
                         <a class="nav-link @item.ActiveLink" asp-page="Index" asp-route-categoryId="@item.Id">@item.Name</a>
                     </li>
                 }
-            </ul>  
-            <hr>
+            </ul>             
             @if (Model.ProductTypeModel.WeightTypes!.Count > 0)
             {
+                <hr>
                 <br /><br />
-                <div class="badge rounded-pill bg-warning w-100 text-center mb-3 fs-4">Sizes</div>
+                <div class="badge bg-info w-100 text-center mb-3 fs-4">Sizes</div>
                 <ul class="nav nav-pills flex-column fs-6 fw-normal">
                     @foreach (var item in Model.ProductTypeModel.WeightTypes)
                     {

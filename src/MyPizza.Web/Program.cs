@@ -7,12 +7,18 @@ using MyPizza.Infrastructure.Data.Identity;
 using MyPizza.Web.Configuration;
 using MyPizza.Web.Services.EmailSender;
 using Serilog;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add Context to container
+#region Configure AppDbContext
 builder.Services.AddDbContext<PizzaContext>(context =>
         context.UseSqlServer(builder.Configuration.GetConnectionString("PizzaConnection")));
+#endregion
+
+#region Configure Stripe
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+#endregion
 
 #region Configure Serilog
 var logger = new LoggerConfiguration()
@@ -50,25 +56,25 @@ builder.Services.AddAuthentication()
     });
 #endregion
 
-// Add services to the container.
+#region Configure razor pages
 builder.Services.AddRazorPages()
     .AddRazorPagesOptions(options => {
         options.Conventions.AddPageRoute("/ProductType/Index", "");
     });
-#region Configure EmailSender
-builder.Services.AddTransient<IEmailSender, EmailSender>();
-//builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 #endregion
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+#region Configure EmailSender
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+#endregion
 
-//AutoMapper
+#region Configure AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+#endregion
 
+#region Configure Own Servises
 //Add own services to the container
 builder.Services.AddCoreServices();
-
+#endregion
 
 
 var app = builder.Build();
@@ -100,11 +106,12 @@ using (var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
+app.UseRequestLocalization("en-US", "en-US");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -113,9 +120,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
 

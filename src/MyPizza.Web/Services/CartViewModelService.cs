@@ -30,7 +30,7 @@ namespace MyPizza.Web.Services
 
         public async Task<int> CountCartProductsAsync(Guid userId)
         {
-            _logger.LogInformation($"User with id {userId} got products amount in cart");
+            _logger.LogInformation($"User with id {userId} get products amount in cart");
             var amount = await _cartQueryService.CountCartProductsAsync(userId);
             return amount;
         }

@@ -4,6 +4,6 @@
     {
         public IList<CategoryViewModel>? Categories { get; set; }
         public IList<WeightTypeViewModel>? WeightTypes { get; set; }
-        public IList<ProductViewModel>? ProductTypeItems { get; set; }
+        public IEnumerable<ProductViewModel[]>? ProductTypeItems { get; set; }
     }
 }

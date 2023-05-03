@@ -4,6 +4,8 @@ using MyPizza.Infrastructure.Data.QueryServices;
 using MyPizza.Infrastructure.Interfaces;
 using MyPizza.Web.Interfaces;
 using MyPizza.Web.Services;
+using MyPizza.Web.Services.Stripe;
+using MyPizza.Web.Services.TimeService;
 
 namespace MyPizza.Web.Configuration
 {
@@ -21,6 +23,8 @@ namespace MyPizza.Web.Configuration
             services.AddScoped(typeof(ICartService), typeof(CartService));
             services.AddScoped(typeof(ICartViewModelService), typeof(CartViewModelService));
             services.AddScoped(typeof(IOrderViewModelService), typeof(OrderViewModelService));
+            services.AddScoped(typeof(IStripeService), typeof(StripeService));
+            services.AddScoped(typeof(ITimeService), typeof(TimeService)); 
             return services;
         }
     }

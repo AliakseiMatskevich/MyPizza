@@ -1,0 +1,22 @@
+﻿@page
+@model MyPizza.Web.Pages.Order.OrderSuccessModel
+@{
+    ViewData["Title"] = "Order success";
+}
+
+<div class="container">
+    <div class="row justify-content-center mb-3 text-success">
+        <div class="col-md-12 fw-bold fs-1 text-center">
+            Thank you for purchase!!!
+        </div>
+    </div>
+    <div class="row justify-content-center mb-3 text-warning">
+        <div class="col-md-12 fw-bold fs-3 text-center">
+            In a moment you will redirect to your orders page
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/order-success.js"></script>
+}

@@ -1,0 +1,27 @@
+﻿@page
+@model MyPizza.Web.Pages.Order.OrderFailedModel
+@{
+    ViewData["Title"] = "Order failed";
+}
+
+<div class="container">
+    <div class="row justify-content-center mb-3 text-danger">
+        <div class="col-md-12 fw-bold fs-1 text-center">
+            Checkout failed.
+        </div>
+    </div>
+    <div class="row justify-content-center mb-3">
+        <div class="col-md-12 fw-bold fs-3 text-center text-danger">
+            You can make payment on the orders page
+        </div>
+    </div>
+    <div class="row justify-content-center mb-3">
+        <div class="col-md-12 fw-bold fs-3 text-center text-warning">
+            In a moment you will redirect to the orders page
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/order-failed.js"></script>
+}
