@@ -13,9 +13,12 @@ namespace MyPizza.Web.Extentions
                                 default;
             if (list.Count > 0)
             {
-                list.Where(x => x.Id == id).FirstOrDefault()!.ActiveLink = "active";
+                var item = list.Where(x => x.Id == id).FirstOrDefault()!;
+                if (item is not null)
+                {
+                    item.ActiveLink = "active";
+                }
             }
-
             return id;
         }
 

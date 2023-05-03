@@ -12,9 +12,5 @@ namespace MyPizza.ApplicationCore.Entities.Abstracts
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        public BaseEntity()
-        {
-            //Id = Guid.NewGuid();
-        }
     }
 }
