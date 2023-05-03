@@ -53,7 +53,7 @@ namespace MyPizza.Web.Pages.Order
         {                        
             if (ModelState.IsValid)
             {                
-                _logger.LogInformation($"{Request.HttpContext.User.Identity!.Name ?? "Unautorised user"} creat an order");
+                _logger.LogInformation($"{Request.HttpContext.User.Identity!.Name ?? "Unautorised user"} create an order");
                 var orderId = await _orderViewModelService.CreateOrderAsync(OrderModel);
                 await _orderViewModelService.SendOrderConfirmationEmailAsync(OrderModel);
                 await _cartService.ClearCartAsync(OrderModel.UserId);
